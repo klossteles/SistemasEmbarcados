@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspace>
+    <project>
+        <path>$WS_DIR$\TivaWare_C_Series-2.1.4.178\driverlib\driverlib.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\TivaWare_C_Series-2.1.4.178\grlib\grlib.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\Projects\lab1\lab1.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\Projects\simple_display\simple_display.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\Projects\simple_io_main_sp\simple_io_main_sp.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\Projects\simple_io_process_sp\simple_io_process_sp.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\Projects\simple_uart\simple_uart.ewp</path>
+    </project>
+    <batchBuild />
+</workspace>
