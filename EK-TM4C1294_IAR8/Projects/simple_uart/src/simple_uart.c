@@ -50,7 +50,7 @@ void main(void){
   
   SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOK); // Habilita GPIO K
   while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOK)); // Aguarda final da habilitação
-  GPIOPadConfigSet(GPIO_PORTK_BASE, GPIO_PIN_0, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
+  //GPIOPadConfigSet(GPIO_PORTK_BASE, GPIO_PIN_0, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
   
   GPIOPinTypeGPIOInput(GPIO_PORTK_BASE, GPIO_PIN_0);
 
@@ -81,6 +81,7 @@ void main(void){
       sumh += veth[samples];
       suml += vetl[samples];
     }
-    UARTprintf("%d %d\n", sumh, suml);
+    for(samples = 0; samples<100000 ; samples++);
+    UARTprintf("%d %d\n", sumh/10, suml/10);
   } // while
 } // main
