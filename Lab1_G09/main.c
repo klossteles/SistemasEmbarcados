@@ -103,7 +103,7 @@ void processSamples(int sample_high[SAMPLE_SIZE], int sample_low[SAMPLE_SIZE]){
   
   
   for (int sample_index = 0 ; sample_index< SAMPLE_SIZE; sample_index++){
-     UARTprintf("Processamento Amostra%d --> : High%d; Low: %d", sample_high[sample_index], sample_low[sample_index]);
+     UARTprintf("Processamento Amostra%d --> : High%d; Low: %d \n", sample_index,  sample_high[sample_index], sample_low[sample_index]);
   }
 
 }
@@ -116,7 +116,8 @@ void getSamples2(){
     
   while(sample_index <= SAMPLE_SIZE){ 
    
-    while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) == GPIO_PIN_7 || high_counter == 0)
+    //TODO: FAZER UM CONTROLE PRO ESTADO DA WAVE PRA NÃO PASSAR POR AQUI DIRETO
+    while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) == GPIO_PIN_7)
     {
       ++high_counter;
     }
@@ -125,12 +126,12 @@ void getSamples2(){
     {
       ++low_counter;
     }
-    
-    UARTprintf("Amostra%d --> Ticks High: %d; Ticks Low: %d \n", sample_index, high_counter, low_counter);
-   
+      
     if (sample_index!= 0){ //rejeita a primeira amostra
-      sample_high[sample_index-1] = high_counter;
-      sample_low[sample_index-1] = low_counter;
+      int aux = sample_index -1;
+      sample_low[aux] = low_counter;
+      sample_high[aux] = high_counter;
+      UARTprintf("Amostra%d --> Ticks High: %d; Ticks Low: %d \n", sample_index-1, high_counter, low_counter);
     }
     
     sample_index++;
