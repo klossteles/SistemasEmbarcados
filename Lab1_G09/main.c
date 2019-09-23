@@ -11,7 +11,7 @@
 #include "driverlib/pin_map.h"
 
 #define BASE_FREQUENCY 24000000
-#define SAMPLE_SIZE 4
+#define SAMPLE_SIZE 10
 
 void initUART(void) { 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
@@ -113,20 +113,21 @@ void getSamples2(){
   int sample_index=0; 
   int high_counter=0; 
   int low_counter = 0;
-    
+  
+  while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) == GPIO_PIN_7);
   while(sample_index <= SAMPLE_SIZE){ 
-   
+   while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) != GPIO_PIN_7);
     //TODO: FAZER UM CONTROLE PRO ESTADO DA WAVE PRA NÃO PASSAR POR AQUI DIRETO
     while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) == GPIO_PIN_7)
     {
       ++high_counter;
-    }
-      
+    } 
     while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) != GPIO_PIN_7)
     {
       ++low_counter;
     }
       
+    
     if (sample_index!= 0){ //rejeita a primeira amostra
       int aux = sample_index -1;
       sample_low[aux] = low_counter;
