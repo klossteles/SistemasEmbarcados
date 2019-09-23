@@ -48,57 +48,6 @@ void initGPIO(){
   GPIOPadConfigSet(GPIO_PORTJ_BASE, GPIO_PIN_0, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
 }
 
-
-
-
-void getSamples(){
- //int keep_pooling;
-  //uint32_t pulse_count; //contador de pulsos
-  //uint32_t sample_number; //numero de amostras 
-  //int wave_state = 1;  //estado da onda
-  //uint32_t frequency = 0;
- // uint32_t metric = 0;
-  //uint32_t time_base = 0;
-  
-  //while(1) {
-
-    //keep_pooling = 1;
-   // pulse_count = 0;
-   // sample_number = 0;
-
-   // while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) == GPIO_PIN_7);
-    
-    //while(keep_pooling == 1) {
-     // sample_number++;
-
-      //int aux = GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7);
-     // if (wave_state == 0 && aux == GPIO_PIN_7) {
-     //   pulse_count++;
-     // } else {
-      //  metric++;
-    //  }
-
-   //   wave_state = aux;
-
-    //  if (sample_number < 1000000) {
-    //    keep_pooling = 1;
-    //  } else {
-    //    keep_pooling = wave_state;
-     // }
-   // }
-
-   // if(GPIOPinRead(GPIO_PORTJ_BASE, GPIO_PIN_0) != GPIO_PIN_0) // Testa estado do push-button SW1
-   //   time_base = !time_base;
-
-   // frequency = (pulse_count/31)*(clock_frequency/sample_number);
-
-   // if (time_base)
-    //	frequency = frequency/1000;
-
-    //UARTprintf("frequency: %d; sample_number: %d; pulse_count: %d\n", frequency, sample_number, pulse_count);
- // }
-}
-
 void processSamples(int sample_high[SAMPLE_SIZE], int sample_low[SAMPLE_SIZE]){
   
   
@@ -116,7 +65,7 @@ void getSamples2(){
   
   while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) == GPIO_PIN_7);
   while(sample_index <= SAMPLE_SIZE){ 
-   while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) != GPIO_PIN_7);
+    while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) != GPIO_PIN_7);
     //TODO: FAZER UM CONTROLE PRO ESTADO DA WAVE PRA NÃO PASSAR POR AQUI DIRETO
     while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) == GPIO_PIN_7)
     {
@@ -132,7 +81,7 @@ void getSamples2(){
       int aux = sample_index -1;
       sample_low[aux] = low_counter;
       sample_high[aux] = high_counter;
-      UARTprintf("Amostra%d --> Ticks High: %d; Ticks Low: %d \n", sample_index-1, high_counter, low_counter);
+      //UARTprintf("Amostra%d --> Ticks High: %d; Ticks Low: %d \n", sample_index-1, high_counter, low_counter);
     }
     
     sample_index++;
