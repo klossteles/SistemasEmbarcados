@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <math.h>
 #include <stdint.h>
 #include "inc/tm4c1294ncpdt.h" // CMSIS-Core
 #include "inc/hw_memmap.h"
@@ -12,6 +13,7 @@
 
 #define BASE_FREQUENCY 24000000
 #define SAMPLE_SIZE 10
+#define TIME_COEFICIENT 40
 
 void initUART(void) { 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
@@ -52,7 +54,25 @@ void processSamples(int sample_high[SAMPLE_SIZE], int sample_low[SAMPLE_SIZE]){
   
   
   for (int sample_index = 0 ; sample_index< SAMPLE_SIZE; sample_index++){
-     UARTprintf("Processamento Amostra%d --> : High%d; Low: %d \n", sample_index,  sample_high[sample_index], sample_low[sample_index]);
+     
+    //calcular os coeficientes de minimo e máximo 
+    int up = 100* sample_high[sample_index];
+    int pulses = sample_high[sample_index] + sample_low[sample_index];
+    int duty_cycle = (int) floor(100*up/pulses);
+    int frequency = (pulses/TIME_COEFICIENT)*BASE_FREQUENCY; //0;
+    int period = 0 ;//(int) (1/frequency * 1000);
+    
+    //pulses equivale a 1000 uS
+    //frequency = (pulse_count/31)*(clock_frequency/sample_number);
+    //frequency = (pulses/TIME_COEFICIENT)*BASE_FREQUENCY;
+    
+   // float d = (up / period);
+    //uint32_t duty_cycle = (uint32_t) 100*(sample_high[sample_index])/(sample_high[sample_index]+sample_high[sample_index]);
+    UARTprintf("Processamento Amostra%d --> : High: %d; Low: %d; DutyCycle: %d; Frequency: %d; Period %d \n",
+                sample_index,  sample_high[sample_index], sample_low[sample_index], 
+                duty_cycle, //duty_cycle, //Duty Cycle
+                frequency, //Frequencia
+                period); //Periodo
   }
 
 }
@@ -63,7 +83,7 @@ void getSamples2(){
   int high_counter=0; 
   int low_counter = 0;
   
-  while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) == GPIO_PIN_7);
+ while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) == GPIO_PIN_7);
   while(sample_index <= SAMPLE_SIZE){ 
     while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) != GPIO_PIN_7);
     //TODO: FAZER UM CONTROLE PRO ESTADO DA WAVE PRA NÃO PASSAR POR AQUI DIRETO
@@ -75,8 +95,7 @@ void getSamples2(){
     {
       ++low_counter;
     }
-      
-    
+     
     if (sample_index!= 0){ //rejeita a primeira amostra
       int aux = sample_index -1;
       sample_low[aux] = low_counter;
@@ -89,8 +108,8 @@ void getSamples2(){
     low_counter = 0;   
    } //termina de pegar as samples 
    
-   processSamples(sample_high, sample_low);
-   
+  processSamples(sample_high, sample_low);
+  
 }
 
 void main(void){
@@ -101,8 +120,16 @@ void main(void){
   
   initGPIO();
   
-  getSamples2();
+  //Descomentar para voltar ao funcionamento normal
+  //getSamples2();
   
+  //Testes
+  int high = 745;
+  int low = 1000-high;
+  int sample_high_test[SAMPLE_SIZE]= {high++, high++, high++, high++, high++, high++, high++,high++, high++, high};
+  int sample_low_test[SAMPLE_SIZE] ={low, --low, --low, --low, --low, --low, --low, --low, --low, --low};  
+  processSamples(sample_high_test, sample_low_test);
+  //Finaliza testes 
 
  
 } 
