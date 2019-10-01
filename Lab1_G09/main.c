@@ -1,5 +1,7 @@
 #include <stdbool.h>
+#include <math.h>
 #include <stdint.h>
+#include <stdio.h>
 #include "inc/tm4c1294ncpdt.h" // CMSIS-Core
 #include "inc/hw_memmap.h"
 #include "driverlib/sysctl.h" // driverlib
@@ -12,6 +14,9 @@
 
 #define BASE_FREQUENCY 24000000
 #define SAMPLE_SIZE 10
+#define HIGH_BASE 668.46
+#define LOW_BASE 623.11
+
 
 void initUART(void) { 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
@@ -48,14 +53,6 @@ void initGPIO(){
   GPIOPadConfigSet(GPIO_PORTJ_BASE, GPIO_PIN_0, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
 }
 
-void processSamples(int sample_high[SAMPLE_SIZE], int sample_low[SAMPLE_SIZE]){
-  
-  
-  for (int sample_index = 0 ; sample_index< SAMPLE_SIZE; sample_index++){
-     UARTprintf("Processamento Amostra%d --> : High%d; Low: %d \n", sample_index,  sample_high[sample_index], sample_low[sample_index]);
-  }
-
-}
 void getSamples2(){
 
   int sample_high[SAMPLE_SIZE],sample_low[SAMPLE_SIZE];   
@@ -63,10 +60,9 @@ void getSamples2(){
   int high_counter=0; 
   int low_counter = 0;
   
-  while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) == GPIO_PIN_7);
+ while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) == GPIO_PIN_7);
   while(sample_index <= SAMPLE_SIZE){ 
     while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) != GPIO_PIN_7);
-    //TODO: FAZER UM CONTROLE PRO ESTADO DA WAVE PRA NÃO PASSAR POR AQUI DIRETO
     while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) == GPIO_PIN_7)
     {
       ++high_counter;
@@ -75,22 +71,36 @@ void getSamples2(){
     {
       ++low_counter;
     }
-      
-    
+     
     if (sample_index!= 0){ //rejeita a primeira amostra
       int aux = sample_index -1;
       sample_low[aux] = low_counter;
       sample_high[aux] = high_counter;
-      //UARTprintf("Amostra%d --> Ticks High: %d; Ticks Low: %d \n", sample_index-1, high_counter, low_counter);
     }
     
     sample_index++;
     high_counter = 0;
     low_counter = 0;   
    } //termina de pegar as samples 
-   
-   processSamples(sample_high, sample_low);
-   
+
+  //int frequency[SAMPLE_SIZE];
+  //int period[SAMPLE_SIZE];
+  int sumh = 0;
+  int suml = 0;
+  for (int sample_index = 0 ; sample_index< SAMPLE_SIZE; sample_index++){
+    sumh += sample_high[sample_index];
+    suml += sample_low[sample_index]; 
+  }
+  float h = sumh/SAMPLE_SIZE;
+  float l = suml/SAMPLE_SIZE;
+  float tot = h + l;
+  char str[20];
+  sprintf(str, "%f", sumh/tot);
+    //calcular os coeficientes de minimo e máximo 
+  //up[0] = sample_high[0];
+  //pulses[0] = sample_high[0] + sample_low[0];
+  //duty_cycle[0] = (int) floor(up[0]/pulses[0]);
+  UARTprintf("DutyCycle: %s\n", str);
 }
 
 void main(void){
@@ -101,8 +111,16 @@ void main(void){
   
   initGPIO();
   
+  //Descomentar para voltar ao funcionamento normal
   getSamples2();
   
+  //Testes
+  //int high = 745;
+  //int low = 1000-high;
+  //int sample_high_test[SAMPLE_SIZE]= {high++, high++, high++, high++, high++, high++, high++,high++, high++, high};
+  //int sample_low_test[SAMPLE_SIZE] ={low, --low, --low, --low, --low, --low, --low, --low, --low, --low};  
+  //processSamples(sample_high_test, sample_low_test);
+  //Finaliza testes 
 
  
 } 
