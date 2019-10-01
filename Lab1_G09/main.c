@@ -1,5 +1,4 @@
 #include <stdbool.h>
-#include <math.h>
 #include <stdint.h>
 #include <stdio.h>
 #include "inc/tm4c1294ncpdt.h" // CMSIS-Core
@@ -91,16 +90,16 @@ void getSamples2(){
     sumh += sample_high[sample_index];
     suml += sample_low[sample_index]; 
   }
-  float h = sumh/SAMPLE_SIZE;
-  float l = suml/SAMPLE_SIZE;
-  float tot = h + l;
-  char str[20];
-  sprintf(str, "%f", sumh/tot);
+  int h = (int) 669*sumh/SAMPLE_SIZE;
+  int l = (int) 623*suml/SAMPLE_SIZE;
+  int tot = h + l;
+  int freq = (int) 1000000000/tot;
+  int duty = (int) 100*h/tot;
     //calcular os coeficientes de minimo e máximo 
   //up[0] = sample_high[0];
   //pulses[0] = sample_high[0] + sample_low[0];
   //duty_cycle[0] = (int) floor(up[0]/pulses[0]);
-  UARTprintf("DutyCycle: %s\n", str);
+  UARTprintf("DutyCycle: %d\nFrequencia: %dHz\n", duty, freq);
 }
 
 void main(void){
