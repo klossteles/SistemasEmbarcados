@@ -11,7 +11,8 @@
 
 #include "driverlib/pin_map.h"
 
-#define BASE_FREQUENCY 24000000
+//#define BASE_FREQUENCY 24000000
+#define BASE_FREQUENCY 120000000
 #define SAMPLE_SIZE 10
 #define HIGH_BASE 668.46
 #define LOW_BASE 623.11
