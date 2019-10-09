@@ -1,3 +1,13 @@
+/***
+Laboratório 1 - Sistemas Embarcados
+
+André Luiz Rodrigues dos Santos
+Luís Henrique Beltrão Santana
+Lucas Kloss Teles 
+
+**/
+
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
