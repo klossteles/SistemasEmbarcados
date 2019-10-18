@@ -37,20 +37,48 @@ void setClockFrequency(int clockFrequency){
                                               clockFrequency);
 }
 
-void initGPIO(){
- //todo: alterar portk e testar em outro port
-  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOK);
-  while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOK));
-  
-  GPIOPinTypeGPIOInput(GPIO_PORTK_BASE, GPIO_PIN_7);
-  GPIOPadConfigSet(GPIO_PORTK_BASE, GPIO_PIN_7, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
+void onEdgeDown(void);
+void onEdgeUp(void);
 
-  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOJ); // Habilita GPIO J (push-button SW1 = PJ0, push-button SW2 = PJ1)
-  while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOJ)); // Aguarda final da habilitação
-    
-  GPIOPinTypeGPIOInput(GPIO_PORTJ_BASE, GPIO_PIN_0); // push-buttons SW1 e SW2 como entrada
-  GPIOPadConfigSet(GPIO_PORTJ_BASE, GPIO_PIN_0, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
+void onEdgeDown(void) {
+    if (GPIOIntStatus(GPIO_PORTK_BASE, false) & GPIO_PIN_7) {
+      // PF4 was interrupt cause
+        GPIOIntRegister(GPIO_PORTK_BASE, onButtonUp);   // Register our handler function for port F
+        GPIOIntTypeSet(GPIO_PORTK_BASE, GPIO_PIN_7,
+            GPIO_RISING_EDGE);          // Configure PF4 for rising edge trigger
+        GPIOIntClear(GPIO_PORTK_BASE, GPIO_PIN_7);  // Clear interrupt flag
+    }
 }
+
+void onEdgeUp(void) {
+    if (GPIOIntStatus(GPIO_PORTK_BASE, false) & GPIO_PIN_7) {
+        // PF4 was interrupt cause
+        GPIOIntRegister(GPIO_PORTK_BASE, onButtonDown); // Register our handler function for port F
+        GPIOIntTypeSet(GPIO_PORTK_BASE, GPIO_PIN_7,
+            GPIO_FALLING_EDGE);                         // Configure PF4 for falling edge trigger
+        GPIOIntClear(GPIO_PORTK_BASE, GPIO_PIN_7);      // Clear interrupt flag
+    }
+}
+
+void initGPIO(){
+    //todo: alterar portk e testar em outro port
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOK);
+    while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOK));
+  
+    GPIOPinTypeGPIOInput(GPIO_PORTK_BASE, GPIO_PIN_7);
+    GPIOPadConfigSet(GPIO_PORTK_BASE, GPIO_PIN_7, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
+  
+    // Interrupt setup
+    GPIOIntDisable(GPIO_PORTK_BASE, GPIO_PIN_7);        // Disable interrupt for PF4 (in case it was enabled)
+    GPIOIntClear(GPIO_PORTK_BASE, GPIO_PIN_7);          // Clear pending interrupts for PF4
+    GPIOIntRegister(GPIO_PORTK_BASE, onEdgeDown);       // Register our handler function for port F
+    GPIOIntTypeSet(GPIO_PORTK_BASE, GPIO_PIN_7,
+        GPIO_FALLING_EDGE);                             // Configure PK4 for falling edge trigger
+    GPIOIntRegister(GPIO_PORTK_BASE, onEdgeUp);         // Register our handler function for port F
+    GPIOIntTypeSet(GPIO_PORTK_BASE, GPIO_PIN_7,
+        GPIO_RISING_EDGE);                              // Configure PF4 for falling edge trigger
+    GPIOIntEnable(GPIO_PORTK_BASE, GPIO_PIN_7);         // Enable interrupt for PF4
+  }
 
 void getSamples2(){
 
