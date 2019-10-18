@@ -43,7 +43,7 @@ void onEdgeUp(void);
 void onEdgeDown(void) {
     if (GPIOIntStatus(GPIO_PORTK_BASE, false) & GPIO_PIN_7) {
       // PF4 was interrupt cause
-        GPIOIntRegister(GPIO_PORTK_BASE, onButtonUp);   // Register our handler function for port F
+        GPIOIntRegister(GPIO_PORTK_BASE, onEdgeUp);   // Register our handler function for port F
         GPIOIntTypeSet(GPIO_PORTK_BASE, GPIO_PIN_7,
             GPIO_RISING_EDGE);          // Configure PF4 for rising edge trigger
         GPIOIntClear(GPIO_PORTK_BASE, GPIO_PIN_7);  // Clear interrupt flag
@@ -53,7 +53,7 @@ void onEdgeDown(void) {
 void onEdgeUp(void) {
     if (GPIOIntStatus(GPIO_PORTK_BASE, false) & GPIO_PIN_7) {
         // PF4 was interrupt cause
-        GPIOIntRegister(GPIO_PORTK_BASE, onButtonDown); // Register our handler function for port F
+        GPIOIntRegister(GPIO_PORTK_BASE, onEdgeDown); // Register our handler function for port F
         GPIOIntTypeSet(GPIO_PORTK_BASE, GPIO_PIN_7,
             GPIO_FALLING_EDGE);                         // Configure PF4 for falling edge trigger
         GPIOIntClear(GPIO_PORTK_BASE, GPIO_PIN_7);      // Clear interrupt flag
