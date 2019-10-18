@@ -1,22 +1,22 @@
-"C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\lcd.c"
+"C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab1_G09\driverlib\lcd.c"
 -std=c11
 -ferror-limit=0
 -fbracket-depth=512
 -MD
 -MF
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\ewarm\Obj\lcd.pbi.dep
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab1_G09\driverlib\ewarm\Obj\lcd.pbi.dep
 -o
 lcd.pbi
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab1_G09\driverlib
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\..
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab1_G09\driverlib\..
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab1_G09
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0
@@ -309,6 +309,7 @@ C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\TivaWare_C
 -D__EDG_FLOAT128_ENABLING_POSSIBLE=0
 -D__EDG_INT128_EXTENSIONS_ALLOWED=0
 -Dewarm=1
+-DPART_TM4C1294NCPDT=1
 -D_DLIB_CONFIG_FILE_HEADER_NAME="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.3\\arm\\inc\\c\\DLib_Config_Normal.h"
 -D_DLIB_CONFIG_FILE_STRING="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.3\\arm\\inc\\c\\DLib_Config_Normal.h"
 -D__VERSION__="IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM"

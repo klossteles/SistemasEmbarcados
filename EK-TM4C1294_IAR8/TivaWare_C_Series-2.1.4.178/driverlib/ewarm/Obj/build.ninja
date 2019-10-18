@@ -49,6 +49,7 @@ build sysexc.pbi : index sysexc.xcl
 build systick.pbi : index systick.xcl
 build timer.pbi : index timer.xcl
 build uart.pbi : index uart.xcl
+build uartstdio.pbi : index uartstdio.xcl
 build udma.pbi : index udma.xcl
 build usb.pbi : index usb.xcl
 build watchdog.pbi : index watchdog.xcl
@@ -56,8 +57,8 @@ build driverlib_part0.pbi : link adc.pbi aes.pbi can.pbi comp.pbi cpu.pbi crc.pb
 build driverlib_part1.pbi : link des.pbi eeprom.pbi emac.pbi epi.pbi flash.pbi fpu.pbi
 build driverlib_part2.pbi : link gpio.pbi hibernate.pbi i2c.pbi interrupt.pbi lcd.pbi mpu.pbi
 build driverlib_part3.pbi : link onewire.pbi pwm.pbi qei.pbi shamd5.pbi ssi.pbi sw_crc.pbi
-build driverlib_part4.pbi : link sysctl.pbi sysexc.pbi systick.pbi timer.pbi uart.pbi udma.pbi
-build driverlib_part5.pbi : link usb.pbi watchdog.pbi
+build driverlib_part4.pbi : link sysctl.pbi sysexc.pbi systick.pbi timer.pbi uart.pbi uartstdio.pbi
+build driverlib_part5.pbi : link udma.pbi usb.pbi watchdog.pbi
 build driverlib.pbd : link driverlib_part0.pbi driverlib_part1.pbi driverlib_part2.pbi driverlib_part3.pbi driverlib_part4.pbi driverlib_part5.pbi
 build driverlib.pbw : browsedata driverlib.pbd
 
