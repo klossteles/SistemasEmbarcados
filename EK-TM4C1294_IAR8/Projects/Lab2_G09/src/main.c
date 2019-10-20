@@ -3,9 +3,10 @@
 #include <stdio.h>
 #include "inc/tm4c1294ncpdt.h" // CMSIS-Core
 #include "inc/hw_memmap.h"
-#include "driverlib/sysctl.h" // driverlib
+#include "driverlib/sysctl.h" 
 #include "driverlib/gpio.h"
-
+#include "driverlib/timer.h"
+#include "driverlib/interrupt.h"
 #include "driverlib/uart.h"
 #include "driverlib/uartstdio.h"
 #include "driverlib/pin_map.h"
@@ -40,24 +41,36 @@ void setClockFrequency(int clockFrequency){
 void onEdgeDown(void);
 void onEdgeUp(void);
 
+//Inicaliza contagem dos tempos em baixa
 void onEdgeDown(void) {
-    if (GPIOIntStatus(GPIO_PORTK_BASE, false) & GPIO_PIN_7) {
+   // if (GPIOIntStatus(GPIO_PORTD_BASE, false) & GPIO_PIN_0) {
       // PF4 was interrupt cause
-        GPIOIntRegister(GPIO_PORTK_BASE, onEdgeUp);   // Register our handler function for port F
-        GPIOIntTypeSet(GPIO_PORTK_BASE, GPIO_PIN_7,
-            GPIO_RISING_EDGE);          // Configure PF4 for rising edge trigger
-        GPIOIntClear(GPIO_PORTK_BASE, GPIO_PIN_7);  // Clear interrupt flag
-    }
+       // GPIOIntRegister(GPIO_PORTK_BASE, onEdgeUp);   // Register our handler function for port F
+       // GPIOIntTypeSet(GPIO_PORTK_BASE, GPIO_PIN_7,
+       //     GPIO_RISING_EDGE);          // Configure PF4 for rising edge trigger
+        //GPIOIntClear(GPIO_PORTD_BASE, GPIO_PIN_0); // Clear interrupt flag
+   // }
+    
+    
+                          
+       TimerIntClear(TIMER0_BASE, TIMER_CAPB_EVENT);     // Clear interrupt flag
+ 
 }
-
+int a = 0;
+int b = 0; //depois isso evolui pros arrays que usaremos pra capturar amostras 
 void onEdgeUp(void) {
-    if (GPIOIntStatus(GPIO_PORTK_BASE, false) & GPIO_PIN_7) {
+    //if (GPIOIntStatus(GPIO_PORTD_BASE, false) & GPIO_PIN_0) {
         // PF4 was interrupt cause
-        GPIOIntRegister(GPIO_PORTK_BASE, onEdgeDown); // Register our handler function for port F
-        GPIOIntTypeSet(GPIO_PORTK_BASE, GPIO_PIN_7,
-            GPIO_FALLING_EDGE);                         // Configure PF4 for falling edge trigger
-        GPIOIntClear(GPIO_PORTK_BASE, GPIO_PIN_7);      // Clear interrupt flag
-    }
+        //GPIOIntRegister(GPIO_PORTK_BASE, onEdgeDown); // Register our handler function for port F
+        //GPIOIntTypeSet(GPIO_PORTK_BASE, GPIO_PIN_7,
+            //GPIO_FALLING_EDGE);                         // Configure PF4 for falling edge trigger
+        //GPIOIntClear(GPIO_PORTD_BASE, GPIO_PIN_0);      // Clear interrupt flag
+    //}
+        
+    TimerIntClear(TIMER0_BASE, TIMER_CAPA_EVENT);
+    a = TimerValueGet(TIMER0_BASE, TIMER_A);
+    b = TimerValueGet(TIMER0_BASE, TIMER_B);
+  
 }
 
 void initGPIO(){
@@ -80,74 +93,69 @@ void initGPIO(){
     GPIOIntEnable(GPIO_PORTK_BASE, GPIO_PIN_7);         // Enable interrupt for PF4
   }
 
-void getSamples2(){
 
-  int sample_high[SAMPLE_SIZE],sample_low[SAMPLE_SIZE];   
-  int sample_index=0; 
-  int high_counter=0; 
-  int low_counter = 0;
+void initTimers(){
   
- while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) == GPIO_PIN_7);
-  while(sample_index <= SAMPLE_SIZE){ 
-    while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) != GPIO_PIN_7);
-    while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) == GPIO_PIN_7)
-    {
-      ++high_counter;
-    } 
-    while(GPIOPinRead(GPIO_PORTK_BASE, GPIO_PIN_7) != GPIO_PIN_7)
-    {
-      ++low_counter;
-    }
-     
-    if (sample_index!= 0){ //rejeita a primeira amostra
-      int aux = sample_index -1;
-      sample_low[aux] = low_counter;
-      sample_high[aux] = high_counter;
-    }
-    
-    sample_index++;
-    high_counter = 0;
-    low_counter = 0;   
-   } //termina de pegar as samples 
+  /////Configurações do Timer0 -------------------------------------------------
+  // Enable and configure Timer0 peripheral.
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
+  // Wait for the Timer0 module to be ready.
+  while(!SysCtlPeripheralReady(SYSCTL_PERIPH_TIMER0)){}
 
-  //int frequency[SAMPLE_SIZE];
-  //int period[SAMPLE_SIZE];
-  int sumh = 0;
-  int suml = 0;
-  for (int sample_index = 0 ; sample_index< SAMPLE_SIZE; sample_index++){
-    sumh += sample_high[sample_index];
-    suml += sample_low[sample_index]; 
-  }
-  int h = (int) 669*sumh/SAMPLE_SIZE;
-  int l = (int) 623*suml/SAMPLE_SIZE;
-  int tot = h + l;
-  int freq = (int) 1000000000/tot;
-  int duty = (int) 100*h/tot;
-    //calcular os coeficientes de minimo e máximo 
-  //up[0] = sample_high[0];
-  //pulses[0] = sample_high[0] + sample_low[0];
-  //duty_cycle[0] = (int) floor(up[0]/pulses[0]);
-  UARTprintf("DutyCycle: %d\nFrequencia: %dHz\n", duty, freq);
+  // Configure TimerA and B 
+  TimerConfigure(TIMER0_BASE, (TIMER_CFG_SPLIT_PAIR | TIMER_CFG_A_CAP_TIME_UP | TIMER_CFG_B_CAP_TIME_UP));
+  // Set both timers to start at zero
+  TimerLoadSet(TIMER0_BASE, TIMER_BOTH, 0);
+  // TimerA triggers on positive edge, TimerB triggers on negative edge
+  TimerControlEvent(TIMER0_BASE, TIMER_A, TIMER_EVENT_POS_EDGE);
+  TimerControlEvent(TIMER0_BASE, TIMER_B, TIMER_EVENT_NEG_EDGE);
+  
+  // Enable the timers.
+  TimerEnable(TIMER0_BASE, TIMER_BOTH);
+  
+  /////Configurações do Pino D0 e D1 -------------------------------------------
+  //Enable para os periféricos
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
+  
+  GPIOPinConfigure(GPIO_PD0_T0CCP0);
+  GPIOPinConfigure(GPIO_PD1_T0CCP1);
+  GPIOPinTypeTimer(GPIO_PORTD_BASE, GPIO_PIN_0);
+  GPIOPinTypeTimer(GPIO_PORTD_BASE, GPIO_PIN_1);
+  
+  // Interrupt setup GPIO -> Funciona, sinal PWM apenas no D0
+  //GPIOIntDisable(GPIO_PORTD_BASE, GPIO_PIN_0);        // Disable interrupt for PD0
+  //GPIOIntClear(GPIO_PORTD_BASE, GPIO_PIN_0);          // Clear pending interrupts for PD
+  //GPIOIntRegister(GPIO_PORTD_BASE, onEdgeDown);       // Register our handler function for port D0
+  //GPIOIntTypeSet(GPIO_PORTD_BASE, GPIO_PIN_0,
+  //GPIO_FALLING_EDGE);                             // Configure PK4 for falling edge trigger
+  //GPIOIntRegister(GPIO_PORTD_BASE, onEdgeUp);         // Register our handler function for port D
+  //GPIOIntTypeSet(GPIO_PORTD_BASE, GPIO_PIN_0,
+  //GPIO_RISING_EDGE);                              // Configure PF4 for falling edge trigger
+  //GPIOIntEnable(GPIO_PORTD_BASE, GPIO_PIN_0);         // Enable interrupt for PF4
+
+  
+  //Interrup setup Timer -> Timer A no D0 e TimerB no D1
+  //Registers a interrupt function to be called when timer b hits a neg edge event
+    TimerIntRegister(TIMER0_BASE, TIMER_A, onEdgeUp); 
+    TimerIntRegister(TIMER0_BASE, TIMER_B, onEdgeDown); 
+    // Makes sure the interrupt is cleared
+    TimerIntClear(TIMER0_BASE, TIMER_CAPA_EVENT);
+    TimerIntClear(TIMER0_BASE, TIMER_CAPB_EVENT);
+    // Enable the indicated timer interrupt source.
+    TimerIntEnable(TIMER0_BASE, TIMER_CAPA_EVENT);
+    TimerIntEnable(TIMER0_BASE, TIMER_CAPB_EVENT);
+    // The specified interrupt is enabled in the interrupt controller.
+    IntEnable(INT_TIMER0A);
+   IntEnable(INT_GPIOD);
+ 
 }
 
 void main(void){
   
   setClockFrequency(BASE_FREQUENCY);
   
-  initUART();
-  
-  initGPIO();
-  
-  //Descomentar para voltar ao funcionamento normal
-  getSamples2();
-  
-  //Testes
-  //int high = 745;
-  //int low = 1000-high;
-  //int sample_high_test[SAMPLE_SIZE]= {high++, high++, high++, high++, high++, high++, high++,high++, high++, high};
-  //int sample_low_test[SAMPLE_SIZE] ={low, --low, --low, --low, --low, --low, --low, --low, --low, --low};  
-  //processSamples(sample_high_test, sample_low_test);
-  //Finaliza testes 
+  initTimers();
 
+  while(1){ };
  
 } 
