@@ -3,7 +3,7 @@
     Integrantes: 
       - André Luiz
       - Lucas Silvestre Kloss Teles
-      - Luiz Henrique
+      - Luis Henrique
 */
 
 #include <stdbool.h>
@@ -13,7 +13,8 @@
 #include "inc/hw_memmap.h"
 #include "driverlib/sysctl.h"                                                   // driverlib
 #include "driverlib/gpio.h"
-
+#include "driverlib/timer.h"
+#include "driverlib/interrupt.h"
 #include "driverlib/uart.h"
 #include "driverlib/uartstdio.h"
 #include "driverlib/pin_map.h"
@@ -53,20 +54,17 @@ void setClockFrequency(int clockFrequency){
   uint32_t ui32SysClock = SysCtlClockFreqSet((SYSCTL_XTAL_25MHZ | SYSCTL_OSC_MAIN | SYSCTL_USE_PLL | SYSCTL_CFG_VCO_480), clockFrequency);
 }
 
-void onEdgeDown(void) {
-    if(GPIOIntStatus(GPIO_PORTK_BASE, false) & GPIO_PIN_7){
-      GPIOIntRegister(GPIO_PORTK_BASE, onEdgeUp);                               // Registra função para o port K
-      GPIOIntTypeSet(GPIO_PORTK_BASE, GPIO_PIN_7, GPIO_RISING_EDGE);            // Configura PK7 para a borda de descida
-      GPIOIntClear(GPIO_PORTK_BASE, GPIO_PIN_7);                                // Limpa a flag de interrupção
-    }
+void onEdgeDown(void) {                  
+       TimerIntClear(TIMER0_BASE, TIMER_CAPB_EVENT);     // Clear interrupt flag
+ 
 }
 
+int a = 0;
+int b = 0; //depois isso evolui pros arrays que usaremos pra capturar amostras 
 void onEdgeUp(void) {
-    if(GPIOIntStatus(GPIO_PORTK_BASE, false) & GPIO_PIN_7){
-        GPIOIntRegister(GPIO_PORTK_BASE, onEdgeDown);                           // Registra função para o port K
-        GPIOIntTypeSet(GPIO_PORTK_BASE, GPIO_PIN_7, GPIO_FALLING_EDGE);         // Configura PK7 para a borda de descida
-        GPIOIntClear(GPIO_PORTK_BASE, GPIO_PIN_7);                              // Limpa a flag de interrupção
-    }
+    TimerIntClear(TIMER0_BASE, TIMER_CAPA_EVENT);
+    a = TimerValueGet(TIMER0_BASE, TIMER_A);
+    b = TimerValueGet(TIMER0_BASE, TIMER_B);
 }
 
 void enableInterrupts(void) {
@@ -89,9 +87,60 @@ void initGPIO(void){
     GPIOPinTypeGPIOInput(GPIO_PORTK_BASE, GPIO_PIN_7);
     GPIOPadConfigSet(GPIO_PORTK_BASE, GPIO_PIN_7, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
   
-    /* -----Configurações das interrupções----- */
-    disableInterrupts();
-    enableInterrupts();
+    // Interrupt setup
+    GPIOIntDisable(GPIO_PORTK_BASE, GPIO_PIN_7);        // Disable interrupt for PF4 (in case it was enabled)
+    GPIOIntClear(GPIO_PORTK_BASE, GPIO_PIN_7);          // Clear pending interrupts for PF4
+    GPIOIntRegister(GPIO_PORTK_BASE, onEdgeDown);       // Register our handler function for port F
+    GPIOIntTypeSet(GPIO_PORTK_BASE, GPIO_PIN_7,
+        GPIO_FALLING_EDGE);                             // Configure PK4 for falling edge trigger
+    GPIOIntRegister(GPIO_PORTK_BASE, onEdgeUp);         // Register our handler function for port F
+    GPIOIntTypeSet(GPIO_PORTK_BASE, GPIO_PIN_7,
+        GPIO_RISING_EDGE);                              // Configure PF4 for falling edge trigger
+    GPIOIntEnable(GPIO_PORTK_BASE, GPIO_PIN_7);         // Enable interrupt for PF4
+  }
+
+
+void initTimers(){
+  
+  /////Configurações do Timer0 -------------------------------------------------
+  // Enable and configure Timer0 peripheral.
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
+  // Wait for the Timer0 module to be ready.
+  while(!SysCtlPeripheralReady(SYSCTL_PERIPH_TIMER0)){}
+
+  // Configure TimerA and B 
+  TimerConfigure(TIMER0_BASE, (TIMER_CFG_SPLIT_PAIR | TIMER_CFG_A_CAP_TIME_UP | TIMER_CFG_B_CAP_TIME_UP));
+  // Set both timers to start at zero
+  TimerLoadSet(TIMER0_BASE, TIMER_BOTH, 0);
+  // TimerA triggers on positive edge, TimerB triggers on negative edge
+  TimerControlEvent(TIMER0_BASE, TIMER_A, TIMER_EVENT_POS_EDGE);
+  TimerControlEvent(TIMER0_BASE, TIMER_B, TIMER_EVENT_NEG_EDGE);
+  
+  // Enable the timers.
+  TimerEnable(TIMER0_BASE, TIMER_BOTH);
+  
+  /////Configurações do Pino D0 e D1 -------------------------------------------
+  //Enable para os periféricos
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
+  
+  GPIOPinConfigure(GPIO_PD0_T0CCP0);
+  GPIOPinConfigure(GPIO_PD1_T0CCP1);
+  GPIOPinTypeTimer(GPIO_PORTD_BASE, GPIO_PIN_0);
+  GPIOPinTypeTimer(GPIO_PORTD_BASE, GPIO_PIN_1);
+  
+  //Interrup setup Timer -> Timer A no D0 e TimerB no D1
+  //Registers a interrupt function to be called when timer b hits a neg edge event
+    TimerIntRegister(TIMER0_BASE, TIMER_A, onEdgeUp); 
+    TimerIntRegister(TIMER0_BASE, TIMER_B, onEdgeDown); 
+    // Makes sure the interrupt is cleared
+    TimerIntClear(TIMER0_BASE, TIMER_CAPA_EVENT);
+    TimerIntClear(TIMER0_BASE, TIMER_CAPB_EVENT);
+    // Enable the indicated timer interrupt source.
+    TimerIntEnable(TIMER0_BASE, TIMER_CAPA_EVENT);
+    TimerIntEnable(TIMER0_BASE, TIMER_CAPB_EVENT);
+    // The specified interrupt is enabled in the interrupt controller.
+    IntEnable(INT_TIMER0A);
+   IntEnable(INT_GPIOD);
 }
 
 void sendValueToUART(void) {
@@ -117,8 +166,10 @@ void sendValueToUART(void) {
 
 void main(void){
   setClockFrequency(BASE_FREQUENCY);
+
   initUART();
-  initGPIO();   
+  initGPIO(); 
+  initTimers();
   while(1) {
     if (sample_index <= SAMPLE_SIZE) {
       disableInterrupts();                                                      // Desabilita as interrupções temporariamente, para que possa ser feita a escrita na uart
