@@ -19,6 +19,12 @@
         <path>$WS_DIR$\Projects\Lab2_G09\Lab02_G09.ewp</path>
     </project>
     <project>
+        <path>$WS_DIR$\Projects\Lab3_G09\Lab3_G09.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\RTX_CM.ewp</path>
+    </project>
+    <project>
         <path>$WS_DIR$\Projects\simple_display\simple_display.ewp</path>
     </project>
     <project>
