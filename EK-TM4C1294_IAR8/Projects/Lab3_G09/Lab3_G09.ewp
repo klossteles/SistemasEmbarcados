@@ -220,7 +220,8 @@
                 <debug>1</debug>
                 <option>
                     <name>CCDefines</name>
-                    <state></state>
+                    <state>PART_TM4C1294NCPDT</state>
+                    <state>UART_BUFFERED</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -2112,6 +2113,9 @@
     </file>
     <file>
         <name>$PROJ_DIR$\..\..\TivaWare_C_Series-2.1.4.178\driverlib\ewarm\Exe\driverlib.a</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\src\elevator.c</name>
     </file>
     <file>
         <name>$PROJ_DIR$\src\main.c</name>

@@ -1,43 +1,138 @@
-#include "system_tm4c1294.h" // CMSIS-Core
-#include "driverleds.h" // device drivers
+/***
+ * S12_G09_Lab3
+ * Laboratório 3 - Sistemas Embarcados
+ * André Luiz Rodrigues dos Santos
+ * Luís Henrique Beltrão Santana
+ * Lucas Kloss Teles
+**/
+
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "inc/tm4c1294ncpdt.h"                                                  // CMSIS-Core
+#include "inc/hw_memmap.h"
+#include "driverlib/sysctl.h"                                                   // driverlib
+#include "driverlib/gpio.h"
+#include "driverlib/timer.h"
+#include "driverlib/uart.h"
+#include "driverlib/uartstdio.h"
+#include "driverlib/pin_map.h"
 #include "cmsis_os2.h" // CMSIS-RTOS
+#include "driverleds.h" // device drivers
 
-osThreadId_t thread1_id, thread2_id;
+#include "elevator.h"
 
-void thread1(void *arg){
-  uint8_t state = 0;
-  
-  while(1){
-    state ^= LED1;
-    LEDWrite(LED1, state);
-    osDelay(100);
-  } // while
-} // thread1
+osSemaphoreId_t controlSemId;
+osThreadId_t elevE_id, elevC_id, elevD_id, control_id;
 
-void thread2(void *arg){
-  uint8_t state = 0;
-  uint32_t tick;
-  
-  while(1){
-    tick = osKernelGetTickCount();
+char ce[80][BUFFER], cc[80][BUFFER], cd[80][BUFFER];
+Elevator elev_e = {'a', 'p', &ce};
+Elevator elev_c = {'a', 'p', &cc};
+Elevator elev_d = {'a', 'p', &cd};
+
+void leftElevatorTask(void *arg0);
+void centralElevatorTask(void *arg0);
+void rightElevatorTask(void *arg0);
+void controlTask(void *arg0);
+void initUART(void);
+
+/*
+ *  ======== main ========
+ */
+void main(void) {
+    SystemInit();
+    LEDInit(LED4 | LED3 | LED2 | LED1);
     
-    state ^= LED2;
-    LEDWrite(LED2, state);
-    
-    osDelayUntil(tick + 100);
-  } // while
-} // thread2
+    osKernelInitialize();
 
-void main(void){
-  LEDInit(LED2 | LED1);
+    elevE_id = osThreadNew(leftElevatorTask, (void*) LED1, NULL);
+    elevC_id = osThreadNew(centralElevatorTask, (void*) LED2, NULL);
+    elevD_id = osThreadNew(rightElevatorTask, (void*) LED3, NULL);
+    control_id = osThreadNew(controlTask, (void*) LED4, NULL);
 
-  osKernelInitialize();
+    controlSemId = osSemaphoreNew(BUFFER, BUFFER, NULL); // espaços disponíveis = BUFFER_SIZE
+  
+    if(osKernelGetState() == osKernelReady)
+      osKernelStart();
 
-  thread1_id = osThreadNew(thread1, NULL, NULL);
-  thread2_id = osThreadNew(thread2, NULL, NULL);
+    while(1);
+}
 
-  if(osKernelGetState() == osKernelReady)
-    osKernelStart();
+void leftElevatorTask(void *arg0){
+    uint8_t led = (uint32_t)arg0;
+    uint8_t state = 0;  
+    while(1){
+        state ^= led;
+        LEDWrite(led, state);
+        osDelay(200);
+    }
+}
 
-  while(1);
-} // main
+void centralElevatorTask(void *arg0){
+    uint8_t led = (uint32_t)arg0;
+    uint8_t state = 0;  
+    while(1){
+        state ^= led;
+        LEDWrite(led, state);
+        osDelay(200);
+    }
+}
+
+void rightElevatorTask(void *arg0){
+    uint8_t led = (uint32_t)arg0;
+    uint8_t state = 0;  
+    while(1){
+        state ^= led;
+        LEDWrite(led, state);
+        osDelay(200);
+    }
+}
+
+void controlTask(void *arg0){
+//    char input[BUFFER];
+//    UART_Handle uart;
+//    UART_Params uartParams;
+//    /* Create a UART with data processing off. */
+//    UART_Params_init(&uartParams);
+//    uartParams.writeDataMode = UART_DATA_TEXT;
+//    uartParams.readDataMode = UART_DATA_TEXT;
+//    uartParams.readReturnMode = UART_RETURN_NEWLINE;
+//    uartParams.readEcho = UART_ECHO_OFF;
+//    uartParams.baudRate = 115200;
+//    uart = UART_open(Board_UART0, &uartParams);
+
+    if (uart == NULL) {
+        System_abort("Error opening the UART");
+    }
+    uint8_t led = (uint32_t)arg0;
+    uint8_t state = 0;  
+
+//    UART_write(uart, echoPrompt, sizeof(echoPrompt));
+
+    UARTprintf(uart, "er\r", 3);
+    UARTprintf(uart, "cr\r", 3);
+    UARTprintf(uart, "dr\r", 3);
+    int size = 1;
+
+    /* Loop forever echoing */
+    while (1) {
+        size = UART_read(uart, &input, 80);
+        input[size] = '\0';
+        rule(input, elev_e);
+        state ^= led;
+        LEDWrite(led, state);
+        osDelay(200);
+    }
+}
+
+void initUART(void) { 
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+    GPIOPinConfigure(GPIO_PA0_U0RX);
+    GPIOPinConfigure(GPIO_PA1_U0TX);
+    UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
+    GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+    UARTStdioConfig(0, 115200, 16000000);
+    UARTprintf("UART started\n");
+}
