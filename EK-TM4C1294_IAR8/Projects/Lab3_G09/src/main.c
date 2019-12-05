@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "system_TM4C1294.h"
 #include "inc/tm4c1294ncpdt.h"                                                  // CMSIS-Core
 #include "inc/hw_memmap.h"
 #include "driverlib/sysctl.h"                                                   // driverlib
@@ -20,6 +21,7 @@
 #include "driverlib/pin_map.h"
 #include "cmsis_os2.h" // CMSIS-RTOS
 #include "driverleds.h" // device drivers
+#include "driverlib/interrupt.h"
 
 #include "elevator.h"
 #include "queue.h"
@@ -36,7 +38,6 @@ void leftElevatorTask(void *arg0);
 void centralElevatorTask(void *arg0);
 void rightElevatorTask(void *arg0);
 void controlTask(void *arg0);
-void initUART(void);
 
 /*
 *  ======== main ========
@@ -91,49 +92,25 @@ void rightElevatorTask(void *arg0){
 }
 
 void controlTask(void *arg0){
-//  char input[BUFFER];
-//  UART_Handle uart;
-//  UART_Params uartParams;
-//  /* Create a UART with data processing off. */
-//  UART_Params_init(&uartParams);
-//  uartParams.writeDataMode = UART_DATA_TEXT;
-//  uartParams.readDataMode = UART_DATA_TEXT;
-//  uartParams.readReturnMode = UART_RETURN_NEWLINE;
-//  uartParams.readEcho = UART_ECHO_OFF;
-//  uartParams.baudRate = 115200;
-//  uart = UART_open(Board_UART0, &uartParams);
-//  
-//  if (uart == NULL) {
-//    System_abort("Error opening the UART");
-//  }
-//  
-//  UART_write(uart, echoPrompt, sizeof(echoPrompt));
-  
-//  UARTprintf("er\r");
-//  UARTprintf("cr\r");
-//  UARTprintf("dr\r");
-//  int size = 1;
-  uint8_t led = (uint32_t)arg0;
-  uint8_t state = 0;  
-  
-  /* Loop forever echoing */
-  while (1) {
-//    size = UART_read(uart, &input, 80);
-//    input[size] = '\0';
-//    rule(input, elev_e);
-    state ^= led;
-    LEDWrite(led, state);
-    osDelay(200);
-  }
-}
-
-void initUART(void) { 
-  SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
   SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+  while (!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOA));
+  GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
   GPIOPinConfigure(GPIO_PA0_U0RX);
   GPIOPinConfigure(GPIO_PA1_U0TX);
-  UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
-  GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-  UARTStdioConfig(0, 115200, 16000000);
-  UARTprintf("UART started\n");
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
+  while(!SysCtlPeripheralReady(SYSCTL_PERIPH_UART0));
+  UARTConfigSetExpClk(UART0_BASE, SystemCoreClock, 115200, (UART_CONFIG_PAR_NONE | UART_CONFIG_STOP_ONE | UART_CONFIG_WLEN_8));
+  UARTFIFOLevelSet(UART0_BASE, UART_FIFO_TX1_8, UART_FIFO_RX1_8);
+  UARTIntDisable(UART0_BASE, 0xFFFFFFFF);
+  UARTIntEnable(UART0_BASE, UART_INT_RX);
+  IntEnable(INT_UART0);
+  UARTEnable(UART0_BASE);
+  
+  char str[] = "er\rcr\rdr\r";
+  for(uint8_t i = 0; i < strlen(str); i++){
+    UARTCharPut(UART0_BASE, str[i]);
+  }
+  
+  osDelay(osWaitForever);
+  while(1);
 }
