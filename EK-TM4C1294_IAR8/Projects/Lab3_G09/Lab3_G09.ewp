@@ -2121,6 +2121,9 @@
         <name>$PROJ_DIR$\src\main.c</name>
     </file>
     <file>
+        <name>$PROJ_DIR$\src\queue.c</name>
+    </file>
+    <file>
         <name>$PROJ_DIR$\..\..\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\CM4F\Exe\RTX_CM.a</name>
     </file>
     <file>
