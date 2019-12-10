@@ -16,7 +16,7 @@
  *----------------------------------------------------------------------------*/
 #define __CONFIG_CLOCK                                                        \
     (SYSCTL_XTAL_25MHZ | SYSCTL_OSC_MAIN | SYSCTL_USE_PLL | SYSCTL_CFG_VCO_480)
-#define __SYSTEM_CLOCK    (120000000UL)
+#define __SYSTEM_CLOCK    (24000000UL)
 
 
 /*----------------------------------------------------------------------------

@@ -128,7 +128,7 @@ __vector_table_0x1c
                 DCD     ADC1SS3_Handler     ;   49 ADC1 Sequence 3
                 DCD     EBI0_Handler        ;   50 External Bus Interface 0
                 DCD     GPIOJ_Handler       ;   51 GPIO Port J
-                DCD     GPIOK_Handler       ;  52 GPIO Port K
+                DCD     GPIOK_Handler       ;   52 GPIO Port K
                 DCD     GPIOL_Handler       ;   53 GPIO Port L
                 DCD     SSI2_Handler        ;   54 SSI2 Rx and Tx
                 DCD     SSI3_Handler        ;   55 SSI3 Rx and Tx

@@ -16,15 +16,15 @@
                 <debug>1</debug>
                 <option>
                     <name>ExePath</name>
-                    <state>ewarm\Exe</state>
+                    <state>debug\Exe</state>
                 </option>
                 <option>
                     <name>ObjPath</name>
-                    <state>ewarm\Obj</state>
+                    <state>debug\Obj</state>
                 </option>
                 <option>
                     <name>ListPath</name>
-                    <state>ewarm\List</state>
+                    <state>debug\List</state>
                 </option>
                 <option>
                     <name>GEndianMode</name>
@@ -2119,9 +2119,6 @@
     </file>
     <file>
         <name>$PROJ_DIR$\src\main.c</name>
-    </file>
-    <file>
-        <name>$PROJ_DIR$\src\queue.c</name>
     </file>
     <file>
         <name>$PROJ_DIR$\..\..\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\CM4F\Exe\RTX_CM.a</name>

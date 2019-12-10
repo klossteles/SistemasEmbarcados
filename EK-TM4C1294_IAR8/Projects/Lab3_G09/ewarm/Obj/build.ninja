@@ -23,13 +23,12 @@ rule browsedata
 build driverleds.pbi : index driverleds.xcl
 build elevator.pbi : index elevator.xcl
 build main.pbi : index main.xcl
-build queue.pbi : index queue.xcl
 build RTX_Config.pbi : index RTX_Config.xcl
 build rtx_lib.pbi : index rtx_lib.xcl
 build system_TM4C1294_TW.pbi : index system_TM4C1294_TW.xcl
-build Lab3_G09_part0.pbi : link driverleds.pbi elevator.pbi main.pbi
-build Lab3_G09_part1.pbi : link queue.pbi RTX_Config.pbi rtx_lib.pbi
-build Lab3_G09_part2.pbi : link system_TM4C1294_TW.pbi
+build Lab3_G09_part0.pbi : link driverleds.pbi elevator.pbi
+build Lab3_G09_part1.pbi : link main.pbi RTX_Config.pbi
+build Lab3_G09_part2.pbi : link rtx_lib.pbi system_TM4C1294_TW.pbi
 build Lab3_G09.pbd : link Lab3_G09_part0.pbi Lab3_G09_part1.pbi Lab3_G09_part2.pbi
 build Lab3_G09.pbw : browsedata Lab3_G09.pbd
 
