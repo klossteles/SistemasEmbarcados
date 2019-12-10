@@ -1,6 +1,10 @@
-/*----------------------------------------------------------------------------
-* CMSIS-RTOS 'main' function template
-*---------------------------------------------------------------------------*/
+/***
+ * S12_G09_Lab3
+ * Laboratório 3 - Sistemas Embarcados
+ * André Luiz Rodrigues dos Santos
+ * Luís Henrique Beltrão Santana
+ * Lucas Silvestre Kloss Teles
+**/
 
 #include <stdint.h>
 #include <stdbool.h>
