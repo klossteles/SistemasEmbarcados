@@ -12,6 +12,7 @@
 
 #include <string.h>
 #include "queue.h"
+//#include "state_machine.h"
 
 #define BUFFER 10
 
@@ -19,10 +20,8 @@
 
 typedef struct elevator{
     char level;
-    // s: subindo
-    // p: parado
-    // d: descendo
-    char state;
+    // ver state_machine.h
+    int state;
     queue_t commands; //todo: trocar por queue
 } Elevator;
 
@@ -33,3 +32,4 @@ char* stop(char elev[]);
 char* closeDoor(char elev[]);
 char* openDoor(char elev[]);
 char* turnLightOn(char param[]);
+char levelMap(int level);
