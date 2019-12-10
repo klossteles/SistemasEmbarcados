@@ -8,6 +8,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdio.h>
 // includes da biblioteca driverlib
 #include "inc/hw_memmap.h"
 #include "driverlib/gpio.h"
@@ -70,8 +71,11 @@ void controlTask(void *arg0){
   UARTInit();
   char str[] = "er\rcr\rdr\r";
   sendString(str);
-  osDelay(osWaitForever);
-  while(1);
+  char uartEntry[5];
+  while(1){
+    UARTgets(uartEntry, 5);
+    printf("Entry: %s \n", uartEntry);
+  };
 }
 
 void UARTInit(void){
