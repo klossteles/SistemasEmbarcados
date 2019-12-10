@@ -18,7 +18,7 @@
 #include "driverleds.h" // device drivers
 #include "cmsis_os2.h" // CMSIS-RTOS
 
-//#include "elevator.h"
+#include "elevator.h"
 
 extern void UARTStdioIntHandler(void);
 
@@ -29,7 +29,7 @@ void leftElevatorTask(void *arg0);
 void centralElevatorTask(void *arg0);
 void rightElevatorTask(void *arg0);
 void controlTask(void *arg0);
-void initUART(void);
+void UARTInit(void);
 
 
 void leftElevatorTask(void *arg0){
@@ -63,7 +63,7 @@ void rightElevatorTask(void *arg0){
 }
 
 void controlTask(void *arg0){
-  initUART();
+  UARTInit();
   UARTprintf("er\r");
   UARTprintf("cr\r");
   UARTprintf("dr\r");
@@ -86,7 +86,7 @@ void UARTInit(void){
   GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
 
   // Initialize the UART for console I/O.
-  UARTStdioConfig(0, 9600, SystemCoreClock);
+  UARTStdioConfig(0, 115200, SystemCoreClock);
 } // UARTInit
 
 void UART0_Handler(void){
