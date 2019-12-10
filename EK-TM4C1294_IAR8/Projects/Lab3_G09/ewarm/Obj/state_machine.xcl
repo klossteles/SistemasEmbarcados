@@ -1,18 +1,46 @@
-"C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Source\rtx_thread.c"
+"C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\src\state_machine.c"
 -std=c11
 -ferror-limit=0
 -fbracket-depth=512
 -MD
 -MF
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\CM0\Obj\rtx_thread.pbi.dep
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\ewarm\Obj\state_machine.pbi.dep
 -o
-rtx_thread.pbi
+state_machine.pbi
 -I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Source
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\src
+-I
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\..\drivers
+-I
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\..\..\TivaWare_C_Series-2.1.4.178
+-I
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\..\..\CMSIS-5.6.0\CMSIS\Core\Include
+-I
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\..\..\CMSIS-5.6.0\CMSIS\RTOS2\Include
+-I
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\..\..\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Include
+-I
+C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\CMSIS\Core\Include
+-I
+C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c
+-I
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\Projects\drivers
+-I
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178
+-I
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\Core\Include
+-I
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\Include
+-I
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Include
+-I
+C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\CMSIS\Core\Include
+-I
+C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\CMSIS\DSP\Include
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0
@@ -161,7 +189,7 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c
 -D__UINTPTR_T_MAX__=0xffffffffU
 -D__INTPTR_SIZE_PREFIX__=""
 -D__JMP_BUF_ELEMENT_TYPE__=unsigned long long int
--D__JMP_BUF_NUM_ELEMENTS__=8
+-D__JMP_BUF_NUM_ELEMENTS__=16
 -D__TID__=0xcf60
 -D__VER__=8040001
 -D__BUILD_NUMBER__=212
@@ -198,7 +226,7 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c
 -D__DEF_STACK_MEM_INDEX__=0
 -D__PRAGMA_PACK_ON__=1
 -D__MULTIPLE_INHERITANCE__=1
--D__AAPCS__=1
+-D__AAPCS_VFP__=1
 -D__ARM4TM__=4
 -D__ARM5TM__=5
 -D__ARM5T__=5
@@ -211,6 +239,16 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c
 -D__ARM7EM__=13
 -D__ARM7M__=7
 -D__ARM7__=7
+-D__ARMVFPV1__=1
+-D__ARMVFPV2__=2
+-D__ARMVFPV3_D16__=1
+-D__ARMVFPV3_FP16__=1
+-D__ARMVFPV3__=3
+-D__ARMVFPV4__=4
+-D__ARMVFP_D16__=1
+-D__ARMVFP_FP16__=1
+-D__ARMVFP_SP__=1
+-D__ARMVFP__=__ARMVFPV4__
 -D__ARM_32BIT_STATE=1
 -D__ARM_ACLE=201
 -D__ARM_ALIGN_MAX_PWR=8
@@ -221,16 +259,18 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c
 -D__ARM_FEATURE_CLZ=1
 -D__ARM_FEATURE_COPROC=15
 -D__ARM_FEATURE_DSP=1
+-D__ARM_FEATURE_FMA=1
 -D__ARM_FEATURE_IDIV=1
 -D__ARM_FEATURE_LDREX=7
 -D__ARM_FEATURE_QBIT=1
 -D__ARM_FEATURE_SAT=1
 -D__ARM_FEATURE_SIMD32=1
 -D__ARM_FEATURE_UNALIGNED=1
+-D__ARM_FP=6
 -D__ARM_FP16_ARGS=1
 -D__ARM_FP16_FORMAT_IEEE=1
 -D__ARM_MEDIA__=1
--D__ARM_PCS=1
+-D__ARM_PCS_VFP=1
 -D__ARM_PROFILE_M__=1
 -D__ARM_SIZE_MINIMAL_ENUM=1
 -D__ARM_SIZE_WCHAR_T=4
@@ -292,7 +332,8 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c
 -D__EDG_FLOAT80_ENABLING_POSSIBLE=0
 -D__EDG_FLOAT128_ENABLING_POSSIBLE=0
 -D__EDG_INT128_EXTENSIONS_ALLOWED=0
--DNDEBUG=1
+-DPART_TM4C1294NCPDT=1
+-DUART_BUFFERED=1
 -D_DLIB_CONFIG_FILE_HEADER_NAME="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.3\\arm\\inc\\c\\DLib_Config_Normal.h"
 -D_DLIB_CONFIG_FILE_STRING="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.3\\arm\\inc\\c\\DLib_Config_Normal.h"
 -D__VERSION__="IAR ANSI C/C++ Compiler V8.40.1.212/W32 for ARM"

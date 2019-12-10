@@ -1,42 +1,42 @@
-"C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Source\rtx_delay.c"
+"C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Source\rtx_delay.c"
 -std=c11
 -ferror-limit=0
 -fbracket-depth=512
 -MD
 -MF
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\CM4F\Obj\rtx_delay.pbi.dep
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\CM4F\Obj\rtx_delay.pbi.dep
 -o
 rtx_delay.pbi
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Source
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Source
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\..\..\..\Config
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\..\..\..\Config
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\..\..\..\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\..\..\..\Include
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\..\..\..\..\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\..\..\..\..\Include
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\..\..\..\..\..\Core\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\..\..\..\..\..\Core\Include
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\..\..\..\..\..\..\Device\ARM\ARMCM4\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\..\..\..\..\..\..\Device\ARM\ARMCM4\Include
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Config
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Config
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Include
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\Include
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\Core\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\Core\Include
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\Device\ARM\ARMCM4\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\Device\ARM\ARMCM4\Include
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0

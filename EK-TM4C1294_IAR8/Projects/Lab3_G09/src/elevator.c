@@ -1,3 +1,11 @@
+/***
+* S12_G09_Lab3
+* Laborat�rio 3 - Sistemas Embarcados
+* Andr� Luiz Rodrigues dos Santos
+* Lu�s Henrique Beltr�o Santana
+* Lucas Kloss Teles
+**/
+
 #include "elevator.h"
 
 int pos = 0;
@@ -124,4 +132,26 @@ char* turnLightOn(char param[]) {
   command[3] = '\r';
   command[4] = '\0';
   return command;
+}
+
+
+char levelMap(int level){
+  switch(level){
+    case 0: return 'a';
+    case 1: return 'b';
+    case 2: return 'c';
+    case 3: return 'd';
+    case 4: return 'e';
+    case 5: return 'f';
+    case 6: return 'g';
+    case 7: return 'h';
+    case 8: return 'i';
+    case 9: return 'j';
+    case 10: return 'k';
+    case 11: return 'l';
+    case 12: return 'm';
+    case 13: return 'n';
+    case 14: return 'o';
+    default: return 'p';
+  }
 }
