@@ -23,6 +23,7 @@
 #include "cmsis_os2.h" // CMSIS-RTOS
 
 #include "elevator.h"
+#include "string_utils.h"
 
 extern void UARTStdioIntHandler(void);
 
@@ -34,7 +35,6 @@ void centralElevatorTask(void *arg0);
 void rightElevatorTask(void *arg0);
 void controlTask(void *arg0);
 void UARTInit(void);
-
 
 void leftElevatorTask(void *arg0){
   uint8_t led = (uint32_t)arg0;
@@ -68,9 +68,8 @@ void rightElevatorTask(void *arg0){
 
 void controlTask(void *arg0){
   UARTInit();
-  UARTprintf("er\r");
-  UARTprintf("cr\r");
-  UARTprintf("dr\r");
+  char str[] = "er\rcr\rdr\r";
+  sendString(str);
   osDelay(osWaitForever);
   while(1);
 }
