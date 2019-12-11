@@ -8,7 +8,35 @@
 
 #include "state_machine.h"
 
+// essa função reage aos comandos enviados pelo simulador
 char* changeState(Elevator *elev, char command[]){
+  switch(command[1]){
+    case 'I':
+      char tmp[4] = "xx\r";
+      tmp[0] = elev->name;
+      if(elev->state == STOPPED_OPEN_DOORS && elev->level != command[2] && (int)command[2] >= (int)'a' && 
+                    (int)command[2] <= (int)'p' ){
+        elev->nextLevel = command[2];
+        tmp[1] = 'f';
+        return &tmp;
+        // precisa acender a luz
+      }
+      break;
+    case 'E':
+      char tmpi[3] = "xx";
+      tmpi[1] = command[2];
+      tmpi[2] = command[3];
+      char requestLevel= levelMap(atoi(&tmp));
+      if((command[4] == 's' || command[4] == 'd') && elev->state == STOPPED_OPEN_DOORS){
+        elev->nextLevel = levelMap(atoi(&tmp));
+        char tmp[4] = "xx\r";
+        tmp[0] = elev->name;
+        tmp[1] = 'f';
+        return &tmp;
+      }
+      break;
+    default: break;
+  }
   switch(elev->state){
     case STOPPED_OPEN_DOORS:
       // sinal de porta fechada recebido recebido
@@ -27,13 +55,18 @@ char* changeState(Elevator *elev, char command[]){
       }
       break;
     case STOPPED_CLOSE_DOORS:
+      if(command[0] == elev->name && command[1] == 'A'){ // aguarda a porta abrir
+        elev->state = STOPPED_OPEN_DOORS;
+      }
       break;
     case GOING_UP:
     case GOING_DOWN:
       if(strlem(command) == 3 && command[0] == elev->name && command[1] == elev->nextLevel){
         char tmp[4] = "xp\r";
         tmp[0] = elev->name;
+        elev->state = STOPPED_CLOSE_DOORS;
         return tmp;
+        // logo em seguida precisa enviar um open door e um apagar a luz se aplicável
       }
       break;
     default: break;
