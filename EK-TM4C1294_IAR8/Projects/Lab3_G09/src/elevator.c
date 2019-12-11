@@ -1,17 +1,33 @@
 /***
 * S12_G09_Lab3
 * Laborat�rio 3 - Sistemas Embarcados
-* Andr� Luiz Rodrigues dos Santos
-* Lu�s Henrique Beltr�o Santana
+* Andre Luiz Rodrigues dos Santos
+* Luis Henrique Beltrao Santana
 * Lucas Kloss Teles
 **/
 
 #include "elevator.h"
+#include "state_machine.h"
 
 int pos = 0;
-char levelE = 'x';
-char levelC = 'x';
-char levelD = 'x';
+
+void elevatorInit(){
+  elev_e.level = 'a';
+  elev_e.nextLevel = 'a';
+  elev_e.name = 'e';
+  elev_e.state = STOPPED_OPEN_DOORS;
+  
+  elev_c.level = 'a';
+  elev_c.nextLevel = 'a';
+  elev_c.name = 'c';
+  elev_c.state = STOPPED_OPEN_DOORS;
+  
+  
+  elev_d.level = 'a';
+  elev_d.nextLevel = 'a';
+  elev_d.name = 'd';
+  elev_d.state = STOPPED_OPEN_DOORS;
+}
 
 void rule(char param[], Elevator elev){
   char command[BUFFER];

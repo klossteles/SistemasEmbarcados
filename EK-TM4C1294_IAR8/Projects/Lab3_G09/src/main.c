@@ -29,11 +29,6 @@
 osSemaphoreId_t controlSemId;
 osThreadId_t elevE_id, elevC_id, elevD_id, control_id;
 
-queue_t ce, cc, cd;
-Elevator elev_e = {'a', 'p', &ce};
-Elevator elev_c = {'a', 'p', &cc};
-Elevator elev_d = {'a', 'p', &cd};
-
 void leftElevatorTask(void *arg0);
 void centralElevatorTask(void *arg0);
 void rightElevatorTask(void *arg0);

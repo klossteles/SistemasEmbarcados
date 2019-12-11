@@ -6,13 +6,11 @@
 * Lucas Kloss Teles
 **/
 
-#ifndef __ELEVATOR__
-#define __ELEVATOR__
-#endif
-
 #include <string.h>
 #include "queue.h"
-#include "state_machine.h"
+
+#ifndef __ELEVATOR__
+#define __ELEVATOR__
 
 #define BUFFER 10
 
@@ -20,11 +18,18 @@
 
 typedef struct elevator{
     char level;
+    char nextLevel;
+    char name;
     // ver state_machine.h
     int state;
     queue_t commands; //todo: trocar por queue
 } Elevator;
 
+Elevator elev_e;
+Elevator elev_c;
+Elevator elev_d;
+
+void elevatorInit();
 void rule(char* param, Elevator elev);
 char* goUp(char elev[]);
 char* goDown(char elev[]);
@@ -33,3 +38,4 @@ char* closeDoor(char elev[]);
 char* openDoor(char elev[]);
 char* turnLightOn(char param[]);
 char levelMap(int level);
+#endif

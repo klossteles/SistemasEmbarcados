@@ -7,6 +7,7 @@
 **/
 
 #include "elevator.h"
+#include <string.h>
 
 #ifndef __STATE_MACHINE__
 #define __STATE_MACHINE__
@@ -16,6 +17,6 @@
 #define GOING_UP 3
 #define GOING_DOWN 4
 
-void changeState(Elevator elev, char[] command);
+char* changeState(Elevator *elev, char command[]);
 
 #endif
