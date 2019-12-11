@@ -1,17 +1,16 @@
 /***
 * S12_G09_Lab3
-* Laboratório 3 - Sistemas Embarcados
-* André Luiz Rodrigues dos Santos
-* Luís Henrique Beltrão Santana
+* Laboratï¿½rio 3 - Sistemas Embarcados
+* Andrï¿½ Luiz Rodrigues dos Santos
+* Luï¿½s Henrique Beltrï¿½o Santana
 * Lucas Kloss Teles
 **/
 
-#ifndef __ELEVATOR__
-#define __ELEVATOR__
-#endif
-
 #include <string.h>
 #include "queue.h"
+
+#ifndef __ELEVATOR__
+#define __ELEVATOR__
 
 #define BUFFER 10
 
@@ -19,13 +18,18 @@
 
 typedef struct elevator{
     char level;
-    // s: subindo
-    // p: parado
-    // d: descendo
-    char state;
+    char nextLevel;
+    char name;
+    // ver state_machine.h
+    int state;
     queue_t commands; //todo: trocar por queue
 } Elevator;
 
+Elevator elev_e;
+Elevator elev_c;
+Elevator elev_d;
+
+void elevatorInit();
 void rule(char* param, Elevator elev);
 char* goUp(char elev[]);
 char* goDown(char elev[]);
@@ -33,3 +37,5 @@ char* stop(char elev[]);
 char* closeDoor(char elev[]);
 char* openDoor(char elev[]);
 char* turnLightOn(char param[]);
+char levelMap(int level);
+#endif

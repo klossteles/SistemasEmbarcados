@@ -1,14 +1,14 @@
-"C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Source\rtx_evflags.c"
+"C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Source\rtx_evflags.c"
 -std=c11
 -ferror-limit=0
 -fbracket-depth=512
 -MD
 -MF
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\CM0\Obj\rtx_evflags.pbi.dep
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\CM0\Obj\rtx_evflags.pbi.dep
 -o
 rtx_evflags.pbi
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Source
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Source
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc
 -I
@@ -129,6 +129,16 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c
 -D__INTMAX_C_SUFFIX__=LL
 -D__UINTMAX_C_SUFFIX__=ULL
 -D__INTMAX_SIZE_PREFIX__="ll"
+-D__ATOMIC_BOOL_LOCK_FREE=2
+-D__ATOMIC_CHAR_LOCK_FREE=2
+-D__ATOMIC_CHAR16_T_LOCK_FREE=2
+-D__ATOMIC_CHAR32_T_LOCK_FREE=2
+-D__ATOMIC_WCHAR_T_LOCK_FREE=2
+-D__ATOMIC_SHORT_LOCK_FREE=2
+-D__ATOMIC_INT_LOCK_FREE=2
+-D__ATOMIC_LONG_LOCK_FREE=2
+-D__ATOMIC_LLONG_LOCK_FREE=0
+-D__ATOMIC_POINTER_LOCK_FREE=2
 -D__FLOAT_SIZE__=4
 -D__FLOAT_ALIGN__=4
 -D__DOUBLE_SIZE__=8
@@ -138,7 +148,7 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c
 -D____FP16_SIZE__=2
 -D____FP16_ALIGN__=2
 -D__NAN_HAS_HIGH_MANTISSA_BIT_SET__=0
--D__SUBNORMAL_FLOATING_POINTS__=0
+-D__SUBNORMAL_FLOATING_POINTS__=1
 -D__SIZE_T_TYPE__=unsigned int
 -D__SIZE_T_MAX__=0xffffffffU
 -D__PTRDIFF_T_TYPE__=signed int
@@ -152,7 +162,7 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c
 -D__INTPTR_SIZE_PREFIX__=""
 -D__JMP_BUF_ELEMENT_TYPE__=unsigned long long int
 -D__JMP_BUF_NUM_ELEMENTS__=8
--D__TID__=0xcf70
+-D__TID__=0xcf60
 -D__VER__=8040001
 -D__BUILD_NUMBER__=212
 -D__IAR_SYSTEMS_ICC__=9
@@ -193,25 +203,39 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c
 -D__ARM5TM__=5
 -D__ARM5T__=5
 -D__ARM5__=5
+-D__ARM6MEDIA__=6
 -D__ARM6M__=11
 -D__ARM6SM__=12
+-D__ARM6T2__=6
 -D__ARM6__=6
+-D__ARM7EM__=13
+-D__ARM7M__=7
+-D__ARM7__=7
 -D__ARM_32BIT_STATE=1
 -D__ARM_ACLE=201
 -D__ARM_ALIGN_MAX_PWR=8
 -D__ARM_ALIGN_MAX_STACK_PWR=3
--D__ARM_ARCH=6
--D__ARM_ARCH_ISA_THUMB=1
+-D__ARM_ARCH=7
+-D__ARM_ARCH_ISA_THUMB=2
 -D__ARM_ARCH_PROFILE='M'
--D__ARM_FEATURE_COPROC=0
+-D__ARM_FEATURE_CLZ=1
+-D__ARM_FEATURE_COPROC=15
+-D__ARM_FEATURE_DSP=1
+-D__ARM_FEATURE_IDIV=1
+-D__ARM_FEATURE_LDREX=7
+-D__ARM_FEATURE_QBIT=1
+-D__ARM_FEATURE_SAT=1
+-D__ARM_FEATURE_SIMD32=1
+-D__ARM_FEATURE_UNALIGNED=1
 -D__ARM_FP16_ARGS=1
 -D__ARM_FP16_FORMAT_IEEE=1
+-D__ARM_MEDIA__=1
 -D__ARM_PCS=1
 -D__ARM_PROFILE_M__=1
 -D__ARM_SIZE_MINIMAL_ENUM=1
 -D__ARM_SIZE_WCHAR_T=4
 -D__CODE_SIZE_LIMIT=0
--D__CORE__=__ARM6M__
+-D__CORE__=__ARM7EM__
 -D__CPU_MODE__=1
 -D__ICCARM_INTRINSICS_VERSION__=2
 -D__ICCARM__=1
@@ -230,7 +254,12 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c
 -D__STDC__=1
 -D__STDC_VERSION__=201710L
 -D__STDC_NO_VLA__=1
--D__STDC_NO_ATOMICS__=1
+-D__MEMORY_ORDER_RELAXED__=0
+-D__MEMORY_ORDER_CONSUME__=1
+-D__MEMORY_ORDER_ACQUIRE__=2
+-D__MEMORY_ORDER_RELEASE__=3
+-D__MEMORY_ORDER_ACQ_REL__=4
+-D__MEMORY_ORDER_SEQ_CST__=5
 -D__STDC_UTF_16__=1
 -D__STDC_UTF_32__=1
 -D__STDC_LIB_EXT1__=201112L

@@ -1,24 +1,24 @@
-"C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\src\queue.c"
+"C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\src\queue.c"
 -std=c11
 -ferror-limit=0
 -fbracket-depth=512
 -MD
 -MF
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\ewarm\Obj\queue.pbi.dep
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\ewarm\Obj\queue.pbi.dep
 -o
 queue.pbi
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\src
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\src
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\..\drivers
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\..\drivers
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\..\..\TivaWare_C_Series-2.1.4.178
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\..\..\TivaWare_C_Series-2.1.4.178
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\..\..\CMSIS-5.6.0\CMSIS\Core\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\..\..\CMSIS-5.6.0\CMSIS\Core\Include
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\..\..\CMSIS-5.6.0\CMSIS\RTOS2\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\..\..\CMSIS-5.6.0\CMSIS\RTOS2\Include
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\..\..\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\Projects\Lab3_G09\..\..\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Include
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\CMSIS\Core\Include
 -I
@@ -28,15 +28,15 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\Projects\drivers
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\Projects\drivers
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\Core\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\Core\Include
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\Include
 -I
-C:\Users\Lucas S. Kloss Teles\Dev\SistemasEmbarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Include
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\CMSIS\Core\Include
 -I

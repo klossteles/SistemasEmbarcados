@@ -1,9 +1,33 @@
+/***
+* S12_G09_Lab3
+* Laborat�rio 3 - Sistemas Embarcados
+* Andre Luiz Rodrigues dos Santos
+* Luis Henrique Beltrao Santana
+* Lucas Kloss Teles
+**/
+
 #include "elevator.h"
+#include "state_machine.h"
 
 int pos = 0;
-char levelE = 'x';
-char levelC = 'x';
-char levelD = 'x';
+
+void elevatorInit(){
+  elev_e.level = 'a';
+  elev_e.nextLevel = 'a';
+  elev_e.name = 'e';
+  elev_e.state = STOPPED_OPEN_DOORS;
+  
+  elev_c.level = 'a';
+  elev_c.nextLevel = 'a';
+  elev_c.name = 'c';
+  elev_c.state = STOPPED_OPEN_DOORS;
+  
+  
+  elev_d.level = 'a';
+  elev_d.nextLevel = 'a';
+  elev_d.name = 'd';
+  elev_d.state = STOPPED_OPEN_DOORS;
+}
 
 void rule(char param[], Elevator elev){
   char command[BUFFER];
@@ -36,12 +60,6 @@ void rule(char param[], Elevator elev){
 }
 
 char* goUp(char elev[]) {
-  char dest[50];
-  char elem[2] = elev[0];
-  strcpy(dest, "going up ");
-  strcat(dest, elem);
-  strcat(dest, " \n");
-  printf("%s", dest);  
   char command[BUFFER];
   command[0] = elev[0];  // qual elevador
   command[1] = 's';
@@ -51,12 +69,6 @@ char* goUp(char elev[]) {
 }
 
 char* goDown(char elev[]) {
-  char dest[50];
-  char elem[2] = elev[0];
-  strcpy(dest, "going down ");
-  strcat(dest, elem);
-  strcat(dest, " \n");
-  printf("%s", dest);  
   char command[BUFFER];
   command[0] = elev[0];  // qual elevador
   command[1] = 'd';
@@ -66,12 +78,6 @@ char* goDown(char elev[]) {
 }
 
 char* stop(char elev[]) {
-  char dest[50];
-  char elem[2] = elev[0];
-  strcpy(dest, "stopping ");
-  strcat(dest, elem);
-  strcat(dest, " \n");
-  printf("%s", dest);
   char command[BUFFER];
   command[0] = elev[0];  // qual elevador
   command[1] = 'p';
@@ -80,13 +86,7 @@ char* stop(char elev[]) {
   return command;
 }
 
-char* closeDoor(char elev[]) {
-  char dest[50];
-  char elem[2] = elev[0];
-  strcpy(dest, "closing door ");
-  strcat(dest, elem);
-  strcat(dest, " \n");
-  printf("%s", dest);    
+char* closeDoor(char elev[]) {   
   char command[BUFFER];
   command[0] = elev[0];  // qual elevador
   command[1] = 'f';
@@ -95,13 +95,7 @@ char* closeDoor(char elev[]) {
   return command;
 }
 
-char* openDoor(char elev[]) {
-  char dest[50];
-  char elem[2] = elev[0];
-  strcpy(dest, "opening door ");
-  strcat(dest, elem);
-  strcat(dest, " \n");
-  printf("%s", dest);    
+char* openDoor(char elev[]) {  
   char command[BUFFER];
   command[0] = elev[0];  // qual elevador
   command[1] = 'a';
@@ -111,12 +105,6 @@ char* openDoor(char elev[]) {
 }
 
 char* turnLightOn(char param[]) {
-  char dest[50];
-  char elem[2] = param[0];
-  strcpy(dest, "turning light on ");
-  strcat(dest, elem);
-  strcat(dest, " \n");
-  printf("%s", dest);    
   char command[BUFFER];
   command[0] = param[0];  // qual elevador
   command[1] = 'L';       // acende a luz no simulador
@@ -124,4 +112,26 @@ char* turnLightOn(char param[]) {
   command[3] = '\r';
   command[4] = '\0';
   return command;
+}
+
+
+char levelMap(int level){
+  switch(level){
+    case 0: return 'a';
+    case 1: return 'b';
+    case 2: return 'c';
+    case 3: return 'd';
+    case 4: return 'e';
+    case 5: return 'f';
+    case 6: return 'g';
+    case 7: return 'h';
+    case 8: return 'i';
+    case 9: return 'j';
+    case 10: return 'k';
+    case 11: return 'l';
+    case 12: return 'm';
+    case 13: return 'n';
+    case 14: return 'o';
+    default: return 'p';
+  }
 }
