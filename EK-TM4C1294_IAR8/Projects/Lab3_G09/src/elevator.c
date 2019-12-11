@@ -60,12 +60,6 @@ void rule(char param[], Elevator elev){
 }
 
 char* goUp(char elev[]) {
-  char dest[50];
-  char elem[2] = elev[0];
-  strcpy(dest, "going up ");
-  strcat(dest, elem);
-  strcat(dest, " \n");
-  printf("%s", dest);  
   char command[BUFFER];
   command[0] = elev[0];  // qual elevador
   command[1] = 's';
@@ -75,12 +69,6 @@ char* goUp(char elev[]) {
 }
 
 char* goDown(char elev[]) {
-  char dest[50];
-  char elem[2] = elev[0];
-  strcpy(dest, "going down ");
-  strcat(dest, elem);
-  strcat(dest, " \n");
-  printf("%s", dest);  
   char command[BUFFER];
   command[0] = elev[0];  // qual elevador
   command[1] = 'd';
@@ -90,12 +78,6 @@ char* goDown(char elev[]) {
 }
 
 char* stop(char elev[]) {
-  char dest[50];
-  char elem[2] = elev[0];
-  strcpy(dest, "stopping ");
-  strcat(dest, elem);
-  strcat(dest, " \n");
-  printf("%s", dest);
   char command[BUFFER];
   command[0] = elev[0];  // qual elevador
   command[1] = 'p';
@@ -104,13 +86,7 @@ char* stop(char elev[]) {
   return command;
 }
 
-char* closeDoor(char elev[]) {
-  char dest[50];
-  char elem[2] = elev[0];
-  strcpy(dest, "closing door ");
-  strcat(dest, elem);
-  strcat(dest, " \n");
-  printf("%s", dest);    
+char* closeDoor(char elev[]) {   
   char command[BUFFER];
   command[0] = elev[0];  // qual elevador
   command[1] = 'f';
@@ -119,13 +95,7 @@ char* closeDoor(char elev[]) {
   return command;
 }
 
-char* openDoor(char elev[]) {
-  char dest[50];
-  char elem[2] = elev[0];
-  strcpy(dest, "opening door ");
-  strcat(dest, elem);
-  strcat(dest, " \n");
-  printf("%s", dest);    
+char* openDoor(char elev[]) {  
   char command[BUFFER];
   command[0] = elev[0];  // qual elevador
   command[1] = 'a';
@@ -135,12 +105,6 @@ char* openDoor(char elev[]) {
 }
 
 char* turnLightOn(char param[]) {
-  char dest[50];
-  char elem[2] = param[0];
-  strcpy(dest, "turning light on ");
-  strcat(dest, elem);
-  strcat(dest, " \n");
-  printf("%s", dest);    
   char command[BUFFER];
   command[0] = param[0];  // qual elevador
   command[1] = 'L';       // acende a luz no simulador
