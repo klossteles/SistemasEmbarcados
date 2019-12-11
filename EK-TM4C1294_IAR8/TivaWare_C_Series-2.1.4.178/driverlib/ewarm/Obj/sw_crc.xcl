@@ -1,22 +1,22 @@
-"C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab1_G09\driverlib\sw_crc.c"
+"C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\sw_crc.c"
 -std=c11
 -ferror-limit=0
 -fbracket-depth=512
 -MD
 -MF
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab1_G09\driverlib\ewarm\Obj\sw_crc.pbi.dep
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\ewarm\Obj\sw_crc.pbi.dep
 -o
 sw_crc.pbi
 -I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab1_G09\driverlib
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib
 -I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab1_G09\driverlib\..
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178\driverlib\..
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c
 -I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab1_G09
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\EK-TM4C1294_IAR8\TivaWare_C_Series-2.1.4.178
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0
