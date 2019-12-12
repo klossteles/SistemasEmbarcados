@@ -322,7 +322,7 @@
 //     <i> Defines maximum number of objects that can be active at the same time.
 //     <i> Applies to objects with system provided memory for control blocks.
 #ifndef OS_MSGQUEUE_NUM
-#define OS_MSGQUEUE_NUM             1
+#define OS_MSGQUEUE_NUM             4
 #endif
  
 //     <o>Data Storage Memory size [bytes] <0-1073741824:8>
