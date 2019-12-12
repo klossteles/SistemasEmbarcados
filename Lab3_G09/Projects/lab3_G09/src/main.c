@@ -30,17 +30,20 @@
 #include "elevator.h"
 #include "string_utils.h"
 
-#define DDEBUG false
-
 extern void UARTStdioIntHandler(void);
 
-//osSemaphoreId_t controlSemId;
 osThreadId_t elevE_id, elevC_id, elevD_id, control_id, messageControl_id;
 
 osMessageQueueId_t osControlMessageQueue_id, osLeftElevatorMessageQueue_id;
 osMessageQueueId_t osRightElevatorMessageQueue_id, osCentralElevatorMessageQueue_id;
 
 osMutexId_t osMutexId;
+const osMutexAttr_t Thread_Mutex_attr = {
+  "messageControlMutex",                    // human readable mutex name
+  osMutexRecursive | osMutexPrioInherit,    // attr_bits
+  NULL,                                     // memory for control block   
+  0U                                        // size for control block
+};
 
 Elevator elev_e;
 Elevator elev_c;
@@ -50,8 +53,9 @@ void leftElevatorTask(void *arg0);
 void centralElevatorTask(void *arg0);
 void rightElevatorTask(void *arg0);
 void controlTask(void *arg0);
-void controlMessageThread(void *arg0);
+void controlMessageTask(void *arg0);
 void UARTInit(void);
+void app_main (void *argument);
 
 void leftElevatorTask(void *arg0){
   elevatorInit(elev_e);                                                         // inicializa elevador
@@ -60,7 +64,6 @@ void leftElevatorTask(void *arg0){
   while(1){
     status = osMessageQueueGet(osLeftElevatorMessageQueue_id, msg, NULL, 0U);   // wait for message
     if (status == osOK) {
-      printf("Message E: %s\n", msg);
 //      changeState(elev_e, msg, str);
       osMutexAcquire(osMutexId, osWaitForever);                                 // adquire mutex para inserção na fila de mensagem da thread control
       osMessageQueuePut(osControlMessageQueue_id, str, 1, 0);
@@ -68,7 +71,7 @@ void leftElevatorTask(void *arg0){
       osThreadYield();
     }
   }
-}
+}// leftElevatorTask
 
 void centralElevatorTask(void *arg0){
   elevatorInit(elev_c);                                                         // inicializa elevador
@@ -77,16 +80,14 @@ void centralElevatorTask(void *arg0){
   while(1){
     status = osMessageQueueGet(osCentralElevatorMessageQueue_id, msg, NULL, 0U);// wait for message
     if (status == osOK) {
-      printf("Message C: %s\n", msg);
-      //      changeState(elev_e, msg, str);
+//      changeState(elev_e, msg, str);
       osMutexAcquire(osMutexId, osWaitForever);                                 // adquire mutex para inserção na fila de mensagem da thread control
-      sprintf(str, "cf\r\0");
       osMessageQueuePut(osControlMessageQueue_id, str, 0U, 0U);
       osMutexRelease(osMutexId);                                                // libera o mutex
       osThreadYield();
     }
   }
-}
+}// centralElevatorTask
 
 void rightElevatorTask(void *arg0){
   elevatorInit(elev_d);                                                         // inicializa elevador
@@ -95,33 +96,30 @@ void rightElevatorTask(void *arg0){
   while(1){
     status = osMessageQueueGet(osRightElevatorMessageQueue_id, msg, NULL, 0U);   // wait for message
     if (status == osOK) {
-      printf("Message D: %s\n", msg);
-      //      changeState(elev_e, msg, str);
+//      changeState(elev_e, msg, str);
       osMutexAcquire(osMutexId, osWaitForever);                                 // adquire mutex para inserção na fila de mensagem da thread control
-      sprintf(str, "df\r\0");
       osMessageQueuePut(osControlMessageQueue_id, str, 0U, 0U);
       osMutexRelease(osMutexId);                                                // libera o mutex
-      osThreadYield();
     }
+    osThreadYield();
   }
-}
+}// rightElevatorTask
 
-void controlMessageThread(void *arg0){
+void controlMessageTask(void *arg0){
   osStatus_t status;
   char str[BUFFER];
   while (1) {
-    status = osMessageQueueGet(osControlMessageQueue_id, str, NULL, 0U);   // wait for message
+    status = osMessageQueueGet(osControlMessageQueue_id, str, NULL, 0U);        // wait for message
     if (status == osOK) {
       sendString(str);
     }
+    osThreadYield();
   }
-}
+}// controlMessageTask
 
 void controlTask(void *arg0){
-  UARTInit();
   char uartEntry[5];
-//  char firstStr[] = "er\rcr\rdr\r";
-  char firstStr[] = "er\r";
+  char firstStr[] = "er\rcr\rdr\r";
   sendString(firstStr);
   
   while(1){
@@ -130,19 +128,19 @@ void controlTask(void *arg0){
       case 'e': 
         osMessageQueuePut(osLeftElevatorMessageQueue_id, uartEntry, 1, 0);
       break;
-//     case 'c': 
-//        osMessageQueuePut(osCentralElevatorMessageQueue_id, uartEntry, 1, 0);
-//      break;
-//     case 'd': 
-//        osMessageQueuePut(osRightElevatorMessageQueue_id, uartEntry, 1, 0);
-//      break;
+     case 'c': 
+        osMessageQueuePut(osCentralElevatorMessageQueue_id, uartEntry, 1, 0);
+      break;
+     case 'd': 
+        osMessageQueuePut(osRightElevatorMessageQueue_id, uartEntry, 1, 0);
+      break;
      default:
         printf("ERROR %s\n", uartEntry);
         break;
     }
     osThreadYield();
   };  
-}
+}// controlTask
 
 void UARTInit(void){
   // Enable the GPIO Peripheral used by the UART.
@@ -166,31 +164,39 @@ void UART0_Handler(void){
   UARTStdioIntHandler();
 } // UART0_Handler
 
+
+void app_main (void *argument) {
+  UARTInit();
+  // cria thread responsável pela fila de mensagens e envio para uart.  
+  messageControl_id = osThreadNew(controlMessageTask, (void*) NULL, NULL);
+  control_id = osThreadNew(controlTask, NULL, NULL);                            //recebimento de dados da uart
+  
+  elevE_id = osThreadNew(leftElevatorTask, NULL, NULL);                         //thread elevador esquerdo
+  elevC_id = osThreadNew(centralElevatorTask, NULL, NULL);                      //thread elevador central
+  elevD_id = osThreadNew(rightElevatorTask, NULL, NULL);                        //thread elevador direito
+  
+  osMutexId = osMutexNew(&Thread_Mutex_attr);                                   // cria mutex para controle de inserção na fila
+  
+  // cria fila de mensagens
+  char msg[BUFFER];
+  osControlMessageQueue_id = osMessageQueueNew(BUFFER, sizeof(msg), NULL);
+  osLeftElevatorMessageQueue_id = osMessageQueueNew(BUFFER, sizeof(msg), NULL);
+  osRightElevatorMessageQueue_id = osMessageQueueNew(BUFFER, sizeof(msg), NULL);
+  osCentralElevatorMessageQueue_id = osMessageQueueNew(BUFFER, sizeof(msg), NULL);
+  while(1) {
+    osDelay(osWaitForever);
+  }
+}// app_main
+
 int main (void){
   SystemInit();
-//  LEDInit(LED4 | LED3 | LED2 | LED1);
   
-  osKernelInitialize();
-  osMutexId = osMutexNew(NULL);         // cria mutex para controle de inserção na fila
+  osKernelInitialize();  
   
-  char msg[BUFFER];
-  // cria fila de mensagens
-  osControlMessageQueue_id = osMessageQueueNew(BUFFER, sizeof(msg), NULL);
-  
-  //cria filas de mensagens dos elevadores
-  osLeftElevatorMessageQueue_id = osMessageQueueNew(BUFFER, sizeof(msg), NULL);
-//  osRightElevatorMessageQueue_id = osMessageQueueNew(BUFFER, sizeof(msg), NULL);
-//  osCentralElevatorMessageQueue_id = osMessageQueueNew(BUFFER, sizeof(msg), NULL);
-  
-  //cria thread responsável pela fila de mensagens e envio para uart.  
-  messageControl_id = osThreadNew(controlMessageThread, (void*) NULL, NULL);
-  control_id = osThreadNew(controlTask, (void*) LED4, NULL);    //recebimento de dados da uart
-  elevE_id = osThreadNew(leftElevatorTask, (void*) LED1, NULL); //thread elevador esquerdo
-//  elevC_id = osThreadNew(centralElevatorTask, (void*) LED2, NULL);    //thread elevador central
-//  elevD_id = osThreadNew(rightElevatorTask, (void*) LED3, NULL);      //thread elevador direito
+  osThreadNew(app_main, NULL, NULL);
   
   if(osKernelGetState() == osKernelReady)
     osKernelStart();
   
   while(1);
-}
+}// main

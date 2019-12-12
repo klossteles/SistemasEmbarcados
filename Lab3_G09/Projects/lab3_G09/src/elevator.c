@@ -16,17 +16,6 @@ void elevatorInit(Elevator elev){
   elev.nextLevel = 'a';
   elev.name = 'e';
   elev.state = STOPPED_OPEN_DOORS;
-  
-//  elev_c.level = 'a';
-//  elev_c.nextLevel = 'a';
-//  elev_c.name = 'c';
-//  elev_c.state = STOPPED_OPEN_DOORS;
-//  
-//  
-//  elev_d.level = 'a';
-//  elev_d.nextLevel = 'a';
-//  elev_d.name = 'd';
-//  elev_d.state = STOPPED_OPEN_DOORS;
 }
 
 void rule(char param[], Elevator elev){
