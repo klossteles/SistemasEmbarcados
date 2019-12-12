@@ -6,10 +6,10 @@
  * Lucas Silvestre Kloss Teles
 **/
 
-#include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "system_TM4C1294.h"
 #include "inc/tm4c1294ncpdt.h"                                                  // CMSIS-Core
 // includes da biblioteca driverlib
@@ -29,6 +29,8 @@
 
 #include "elevator.h"
 #include "string_utils.h"
+
+#define DDEBUG false
 
 extern void UARTStdioIntHandler(void);
 
@@ -80,22 +82,33 @@ void rightElevatorTask(void *arg0){
 
 void controlTask(void *arg0){
   UARTInit();
-  char str[] = "er\rcr\rdr\r";
-  sendString(str);
+  char firstStr[] = "er\rcr\rdr\r";
+  sendString(firstStr);
+
+//  char teste[] = "e";
+//  char dest[BUFFER];
+//  closeDoor(teste, dest);
+//  printf("%s", dest);
+//  sendString(dest);
+//  osDelay(osWaitForever);
   
   char uartEntry[5];
+  char str[BUFFER];
   while(1){
     UARTgets(uartEntry, 5);
-    printf("Entry: %s \n", uartEntry);
+    printf("UARTgets: %s \n", uartEntry);
     switch(uartEntry[0]){
       case 'e': 
-        changeState(elev_e, uartEntry);
+        changeState(elev_e, uartEntry, str);
+        sendString(str);
       break;
       case 'c': 
-        changeState(elev_c, uartEntry);
+        changeState(elev_c, uartEntry, str);
+        sendString(str);
       break;
       case 'd': 
-        changeState(elev_d, uartEntry);
+        changeState(elev_d, uartEntry, str);
+        sendString(str);
       break;
        default:
         printf("ERROR %s\n", uartEntry);

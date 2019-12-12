@@ -17,6 +17,6 @@
 #define GOING_UP 3
 #define GOING_DOWN 4
 
-char* changeState(Elevator *elev, char command[]);
+void changeState(Elevator *elev, char command[], char * str);
 
 #endif

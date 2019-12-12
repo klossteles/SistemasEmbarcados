@@ -33,20 +33,21 @@ void rule(char param[], Elevator elev){
   char command[BUFFER];
   switch(param[1]){
      case 'I':
-      if(elev.level != param[2]){
+      if(elev.level != param[2]){                                               // verifica se não é o mesmo andar
         //todo: proteger com mutex
-        char* dest = turnLightOn(param);
+        char dest[BUFFER];
+        turnLightOn(param, dest);
         queue_append((queue_t **)&elev.commands, (queue_t *)dest);
-        dest = closeDoor(param);
+        closeDoor(param, dest);
         queue_append((queue_t **)&elev.commands, (queue_t *)dest);
         //            controlList[pos++] = turnLightOn(param); // acende a luz do painel interno
         //            controlList[pos++] = closeDoor(param);   // fecha a porta
         if(elev.level != 'p' && (int) elev.level < (int) param[2]){
-          dest = goUp(param);
+          goUp(param, dest);
           queue_append((queue_t **)&elev.commands, (queue_t *)dest);
           //              controlList[pos++] = goUp(param);    // subir
         } else if(elev.level != 'a' && (int) elev.level > (int) param[2]){
-          dest = goDown(param);
+          goDown(param, dest);
           queue_append((queue_t **)&elev.commands, (queue_t *)dest);
           //              controlList[pos++] = goDown(param);    // descer
         }
@@ -59,59 +60,41 @@ void rule(char param[], Elevator elev){
   }
 }
 
-char* goUp(char elev[]) {
-  char command[BUFFER];
+void goUp(char elev[], char * str) {
+  char command[BUFFER] = "xs\r\0";
   command[0] = elev[0];  // qual elevador
-  command[1] = 's';
-  command[2] = '\r';
-  command[3] = '\0';
-  return command;
+  strcpy(str, command);
 }
 
-char* goDown(char elev[]) {
-  char command[BUFFER];
+void goDown(char elev[], char * str) {
+  char command[BUFFER] = "xd\r\0";
   command[0] = elev[0];  // qual elevador
-  command[1] = 'd';
-  command[2] = '\r';
-  command[3] = '\0';
-  return command;
+  strcpy(str, command);
 }
 
-char* stop(char elev[]) {
-  char command[BUFFER];
+void stop(char elev[], char * str) {
+  char command[BUFFER] = "xp\r\0";
   command[0] = elev[0];  // qual elevador
-  command[1] = 'p';
-  command[2] = '\r';
-  command[3] = '\0';
-  return command;
+  strcpy(str, command);
 }
 
-char* closeDoor(char elev[]) {   
-  char command[BUFFER];
+void closeDoor(char elev[], char * str) {   
+  char command[BUFFER] = "xf\r\0";
   command[0] = elev[0];  // qual elevador
-  command[1] = 'f';
-  command[2] = '\r';
-  command[3] = '\0';
-  return command;
+  strcpy(str, command);
 }
 
-char* openDoor(char elev[]) {  
-  char command[BUFFER];
+void openDoor(char elev[], char * str) {  
+  char command[BUFFER] = "xa\r\0";
   command[0] = elev[0];  // qual elevador
-  command[1] = 'a';
-  command[2] = '\r';
-  command[3] = '\0';
-  return command;
+  strcpy(str, command);
 }
 
-char* turnLightOn(char param[]) {
-  char command[BUFFER];
+void turnLightOn(char param[], char * str) {
+  char command[BUFFER] = "xa\r\0";
   command[0] = param[0];  // qual elevador
-  command[1] = 'L';       // acende a luz no simulador
   command[2] = param[2];  // qual andar
-  command[3] = '\r';
-  command[4] = '\0';
-  return command;
+  strcpy(str, command);
 }
 
 

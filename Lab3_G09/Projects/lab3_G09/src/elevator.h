@@ -27,11 +27,11 @@ typedef struct elevator{
 
 void elevatorInit();
 void rule(char* param, Elevator elev);
-char* goUp(char elev[]);
-char* goDown(char elev[]);
-char* stop(char elev[]);
-char* closeDoor(char elev[]);
-char* openDoor(char elev[]);
-char* turnLightOn(char param[]);
+void goUp(char elev[], char * str);
+void goDown(char elev[], char * str);
+void stop(char elev[], char * str);
+void closeDoor(char elev[], char * str);
+void openDoor(char elev[], char * str);
+void turnLightOn(char param[], char * str);
 char levelMap(int level);
 #endif
