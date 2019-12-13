@@ -1,9 +1,9 @@
 /***
 * S12_G09_Lab3
-* Laborat�rio 3 - Sistemas Embarcados
-* Andre Luiz Rodrigues dos Santos
-* Luis Henrique Beltrao Santana
-* Lucas Kloss Teles
+* Laboratório 3 - Sistemas Embarcados
+* André Luiz Rodrigues dos Santos
+* Luís Henrique Beltrão Santana
+* Lucas Silvestre Kloss Teles
 **/
 
 #include "elevator.h"
@@ -11,43 +11,32 @@
 
 int pos = 0;
 
-void elevatorInit(Elevator *elev, char name){  
+void elevatorInit(Elevator *elev, char name, osMessageQueueId_t osMessageQueue, osMessageQueueId_t osControlMsgQueueId){  
   elev->level = 'a';
   elev->nextLevel = 'a';
   elev->name = name;
   elev->state = STOPPED_OPEN_DOORS;
+  elev->osMessageQueue_id = osMessageQueue;
+  elev->osMsgControl_id = osControlMsgQueueId;
 }
 
-void rule(char param[], Elevator elev){
-  char command[BUFFER];
-  switch(param[1]){
-     case 'I':
-      if(elev.level != param[2]){                                               // verifica se não é o mesmo andar
-        //todo: proteger com mutex
-        char dest[BUFFER];
-        turnLightOn(param, dest);
-        queue_append((queue_t **)&elev.commands, (queue_t *)dest);
-        closeDoor(param, dest);
-        queue_append((queue_t **)&elev.commands, (queue_t *)dest);
-        //            controlList[pos++] = turnLightOn(param); // acende a luz do painel interno
-        //            controlList[pos++] = closeDoor(param);   // fecha a porta
-        if(elev.level != 'p' && (int) elev.level < (int) param[2]){
-          goUp(param, dest);
-          queue_append((queue_t **)&elev.commands, (queue_t *)dest);
-          //              controlList[pos++] = goUp(param);    // subir
-        } else if(elev.level != 'a' && (int) elev.level > (int) param[2]){
-          goDown(param, dest);
-          queue_append((queue_t **)&elev.commands, (queue_t *)dest);
-          //              controlList[pos++] = goDown(param);    // descer
-        }
-      }
-    break;
-     case 'E':
-    break;
-     default: 
-    break;
+void elevatorTask(void *arg0){
+  char name = ((Elevator *)arg0)->name;
+  osMessageQueueId_t osMessageQueueId = ((Elevator *)arg0)->osMessageQueue_id;
+  osMessageQueueId_t osControlMsgQueueId = ((Elevator *)arg0)->osMsgControl_id;
+  Elevator elev;
+  elevatorInit(&elev, name, osMessageQueueId, osControlMsgQueueId );            // inicializa elevador
+  
+  char str[BUFFER], msg[5];
+  osStatus_t status;
+  while(1){
+    status = osMessageQueueGet(elev.osMessageQueue_id, msg, NULL, 0U);   // wait for message
+    if (status == osOK) {
+      changeState(&elev, msg, str);
+      osThreadYield();
+    }
   }
-}
+}// leftElevatorTask
 
 void goUp(char elev[], char * str) {
   char command[BUFFER] = "xs\r\0";
@@ -80,12 +69,18 @@ void openDoor(char elev[], char * str) {
 }
 
 void turnLightOn(char param[], char * str) {
-  char command[BUFFER] = "xa\r\0";
+  char command[BUFFER] = "xLx\r\0";
   command[0] = param[0];  // qual elevador
   command[2] = param[2];  // qual andar
   strcpy(str, command);
 }
 
+void turnLightOff(char param[], char * str) {
+  char command[BUFFER] = "xDx\r\0";
+  command[0] = param[0];  // qual elevador
+  command[2] = param[2];  // qual andar
+  strcpy(str, command);
+}
 
 char levelMap(int level){
   switch(level){
