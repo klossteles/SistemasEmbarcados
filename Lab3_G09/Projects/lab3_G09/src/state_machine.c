@@ -25,10 +25,10 @@ void changeState(Elevator *elev, char command[], char * str){
       break;
      case 'E':
         char tmpi[3] = "xx";
-        tmpi[1] = command[2];
-        tmpi[2] = command[3];
+        tmpi[0] = command[2];
+        tmpi[1] = command[3];
         char requestLevel= levelMap(atoi(&tmpi));
-        if((command[4] == 's' || command[4] == 'd') && elev->state == STOPPED_OPEN_DOORS){
+        if(elev->state == STOPPED_OPEN_DOORS){
           elev->nextLevel = levelMap(atoi(&tmp));
           char tmp[4] = "xx\r";
           tmp[0] = elev->name;
