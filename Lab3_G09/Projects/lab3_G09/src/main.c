@@ -28,6 +28,7 @@
 #include "cmsis_os2.h" // CMSIS-RTOS
 
 #include "elevator.h"
+#include "state_machine.h"
 #include "string_utils.h"
 #include "state_machine.h"
 

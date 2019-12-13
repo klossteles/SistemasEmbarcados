@@ -1,42 +1,38 @@
-"C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Source\rtx_evr.c"
+"C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\Projects\blinky\src\rtx_lib.c"
 -std=c11
 -ferror-limit=0
 -fbracket-depth=512
 -MD
 -MF
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\CM4F\Obj\rtx_evr.pbi.dep
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\Projects\blinky\ewarm\Obj\rtx_lib.pbi.dep
 -o
-rtx_evr.pbi
+rtx_lib.pbi
 -I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Source
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\Projects\blinky\src
 -I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\..\..\..\Config
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\Projects\blinky\..\drivers
 -I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\..\..\..\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\Projects\blinky\..\..\TivaWare_C_Series-2.1.4.178
 -I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\..\..\..\..\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\Projects\blinky\..\..\CMSIS-5.6.0\CMSIS\Core\Include
 -I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\..\..\..\..\..\Core\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\Projects\blinky\..\..\CMSIS-5.6.0\CMSIS\RTOS2\Include
 -I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE
--I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE\..\..\..\..\..\..\Device\ARM\ARMCM4\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\Projects\blinky\..\..\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Include
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\inc\c
 -I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Config
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\Projects\drivers
 -I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Include
--I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\CMSIS-5.6.0\CMSIS\RTOS2\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\TivaWare_C_Series-2.1.4.178
 -I
 C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\CMSIS-5.6.0\CMSIS\Core\Include
 -I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Library\IAR\IDE
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\CMSIS-5.6.0\CMSIS\RTOS2\Include
 -I
-C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\CMSIS-5.6.0\Device\ARM\ARMCM4\Include
+C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\CMSIS-5.6.0\CMSIS\RTOS2\RTX\Include
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0
@@ -328,8 +324,6 @@ C:\Users\beltr\OneDrive\Alfa\UTFPR\Embarcados\Lab3_G09\CMSIS-5.6.0\Device\ARM\AR
 -D__EDG_FLOAT80_ENABLING_POSSIBLE=0
 -D__EDG_FLOAT128_ENABLING_POSSIBLE=0
 -D__EDG_INT128_EXTENSIONS_ALLOWED=0
--DNDEBUG=1
--DCMSIS_device_header="ARMCM4_FP.h"
 -D_DLIB_CONFIG_FILE_HEADER_NAME="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.3\\arm\\inc\\c\\DLib_Config_Normal.h"
 -D_DLIB_CONFIG_FILE_STRING="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.3\\arm\\inc\\c\\DLib_Config_Normal.h"
 -D__VERSION__="IAR ANSI C/C++ Compiler V8.40.2.214/W32 for ARM"

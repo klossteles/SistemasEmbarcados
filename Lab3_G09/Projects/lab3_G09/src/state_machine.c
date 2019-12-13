@@ -42,7 +42,7 @@ void changeState(Elevator *elev, char command[], char * str){
   switch(elev->state){
     case STOPPED_OPEN_DOORS:
         // sinal de porta fechada recebido recebido
-        if(strlen(command) == 3 && command[0] == elev->name && command[1] == 'F'){
+        if(strlen(command) == 2 && command[0] == elev->name && command[1] == 'F'){
           char tmp[4] = "xx\r";
           tmp[0] = elev->name;
           if((int)elev->level > (int)elev->nextLevel){
@@ -64,7 +64,7 @@ void changeState(Elevator *elev, char command[], char * str){
         break;
          case GOING_UP:
          case GOING_DOWN:
-        if(strlen(command) == 3 && command[0] == elev->name && command[1] == elev->nextLevel){
+        if(strlen(command) == 2 && command[0] == elev->name && command[1] == elev->nextLevel){
           char tmp[4] = "xp\r";
           tmp[0] = elev->name;
           elev->state = STOPPED_CLOSE_DOORS;

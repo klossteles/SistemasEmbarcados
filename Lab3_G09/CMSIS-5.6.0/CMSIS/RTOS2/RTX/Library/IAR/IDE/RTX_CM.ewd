@@ -88,7 +88,7 @@
                 </option>
                 <option>
                     <name>OCLastSavedByProductVersion</name>
-                    <state>8.30.1.17146</state>
+                    <state>8.40.2.22864</state>
                 </option>
                 <option>
                     <name>UseFlashLoader</name>
@@ -2972,7 +2972,7 @@
         </debuggerPlugins>
     </configuration>
     <configuration>
-        <name>CM4F</name>
+        <name>V8MB</name>
         <toolchain>
             <name>ARM</name>
         </toolchain>
@@ -3058,7 +3058,7 @@
                 </option>
                 <option>
                     <name>OCLastSavedByProductVersion</name>
-                    <state>8.30.1.17146</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>UseFlashLoader</name>
@@ -3082,7 +3082,7 @@
                 </option>
                 <option>
                     <name>FlashLoadersV3</name>
-                    <state>$TOOLKIT_DIR$\config\flashloader\</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>OCImagesSuppressCheck1</name>
@@ -3150,7 +3150,7 @@
                 </option>
                 <option>
                     <name>OCMulticoreNrOfCores</name>
-                    <state>1</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>OCMulticoreWorkspace</name>
@@ -4457,7 +4457,7 @@
         </debuggerPlugins>
     </configuration>
     <configuration>
-        <name>V8MB</name>
+        <name>CM4F</name>
         <toolchain>
             <name>ARM</name>
         </toolchain>
@@ -4543,7 +4543,7 @@
                 </option>
                 <option>
                     <name>OCLastSavedByProductVersion</name>
-                    <state></state>
+                    <state>8.40.2.22864</state>
                 </option>
                 <option>
                     <name>UseFlashLoader</name>
@@ -4567,7 +4567,7 @@
                 </option>
                 <option>
                     <name>FlashLoadersV3</name>
-                    <state></state>
+                    <state>$TOOLKIT_DIR$\config\flashloader\</state>
                 </option>
                 <option>
                     <name>OCImagesSuppressCheck1</name>
@@ -4635,7 +4635,7 @@
                 </option>
                 <option>
                     <name>OCMulticoreNrOfCores</name>
-                    <state></state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OCMulticoreWorkspace</name>
