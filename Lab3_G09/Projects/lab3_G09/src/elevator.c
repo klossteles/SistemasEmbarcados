@@ -11,11 +11,11 @@
 
 int pos = 0;
 
-void elevatorInit(Elevator elev){  
-  elev.level = 'a';
-  elev.nextLevel = 'a';
-  elev.name = 'e';
-  elev.state = STOPPED_OPEN_DOORS;
+void elevatorInit(Elevator *elev, char name){  
+  elev->level = 'a';
+  elev->nextLevel = 'a';
+  elev->name = name;
+  elev->state = STOPPED_OPEN_DOORS;
 }
 
 void rule(char param[], Elevator elev){

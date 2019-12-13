@@ -10,7 +10,6 @@
 
 // essa função reage aos comandos enviados pelo simulador
 void changeState(Elevator *elev, char command[], char * str){
-  printf("Command: %s\n", command);
   switch(command[1]){
      case 'I':
         char tmp[4] = "xx\r";
@@ -22,6 +21,7 @@ void changeState(Elevator *elev, char command[], char * str){
          strcpy(str, tmp);
          // precisa acender a luz
        }
+       return;
       break;
      case 'E':
         char tmpi[3] = "xx";
@@ -35,6 +35,7 @@ void changeState(Elevator *elev, char command[], char * str){
           tmp[1] = 'f';
           strcpy(str, tmp);
         }
+        return;
     break;
     default: break;
   }
@@ -54,6 +55,7 @@ void changeState(Elevator *elev, char command[], char * str){
           }
           strcpy(str, tmp);
         }
+        return;
     break;
     case STOPPED_CLOSE_DOORS:
         if(command[0] == elev->name && command[1] == 'A'){ // aguarda a porta abrir
@@ -69,9 +71,8 @@ void changeState(Elevator *elev, char command[], char * str){
           strcpy(str, tmp);
           // logo em seguida precisa enviar um open door e um apagar a luz se aplicável
         }
+        return;
     break;
     default: break;
   }
-  char tmp[5] = "erro";
-  strcpy(str, tmp);
 }

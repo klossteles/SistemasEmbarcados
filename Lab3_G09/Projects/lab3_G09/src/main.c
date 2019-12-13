@@ -59,7 +59,7 @@ void UARTInit(void);
 void app_main (void *argument);
 
 void leftElevatorTask(void *arg0){
-  elevatorInit(elev_e);                                                         // inicializa elevador
+  elevatorInit(&elev_e, 'e');                                                         // inicializa elevador
   char str[BUFFER], msg[5];
   osStatus_t status;
   while(1){
@@ -75,7 +75,7 @@ void leftElevatorTask(void *arg0){
 }// leftElevatorTask
 
 void centralElevatorTask(void *arg0){
-  elevatorInit(elev_c);                                                         // inicializa elevador
+  elevatorInit(&elev_c, 'c');                                                         // inicializa elevador
   char str[BUFFER], msg[5];
   osStatus_t status;
   while(1){
@@ -91,7 +91,7 @@ void centralElevatorTask(void *arg0){
 }// centralElevatorTask
 
 void rightElevatorTask(void *arg0){
-  elevatorInit(elev_d);                                                         // inicializa elevador
+  elevatorInit(&elev_d, 'd');                                                         // inicializa elevador
   char str[BUFFER], msg[5];
   osStatus_t status;
   while(1){

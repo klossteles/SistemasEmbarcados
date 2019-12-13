@@ -25,7 +25,7 @@ typedef struct elevator{
     queue_t commands; //todo: trocar por queue
 } Elevator;
 
-void elevatorInit();
+void elevatorInit(Elevator *elev, char name);
 void rule(char* param, Elevator elev);
 void goUp(char elev[], char * str);
 void goDown(char elev[], char * str);
