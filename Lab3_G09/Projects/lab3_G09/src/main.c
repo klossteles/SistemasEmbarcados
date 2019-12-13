@@ -29,6 +29,7 @@
 
 #include "elevator.h"
 #include "string_utils.h"
+#include "state_machine.h"
 
 extern void UARTStdioIntHandler(void);
 
@@ -64,7 +65,7 @@ void leftElevatorTask(void *arg0){
   while(1){
     status = osMessageQueueGet(osLeftElevatorMessageQueue_id, msg, NULL, 0U);   // wait for message
     if (status == osOK) {
-//      changeState(elev_e, msg, str);
+      changeState(&elev_e, msg, str);
       osMutexAcquire(osMutexId, osWaitForever);                                 // adquire mutex para inserção na fila de mensagem da thread control
       osMessageQueuePut(osControlMessageQueue_id, str, 1, 0);
       osMutexRelease(osMutexId);                                                // libera o mutex
@@ -80,7 +81,7 @@ void centralElevatorTask(void *arg0){
   while(1){
     status = osMessageQueueGet(osCentralElevatorMessageQueue_id, msg, NULL, 0U);// wait for message
     if (status == osOK) {
-//      changeState(elev_e, msg, str);
+      changeState(&elev_c, msg, str);
       osMutexAcquire(osMutexId, osWaitForever);                                 // adquire mutex para inserção na fila de mensagem da thread control
       osMessageQueuePut(osControlMessageQueue_id, str, 0U, 0U);
       osMutexRelease(osMutexId);                                                // libera o mutex
@@ -96,7 +97,7 @@ void rightElevatorTask(void *arg0){
   while(1){
     status = osMessageQueueGet(osRightElevatorMessageQueue_id, msg, NULL, 0U);   // wait for message
     if (status == osOK) {
-//      changeState(elev_e, msg, str);
+      changeState(&elev_d, msg, str);
       osMutexAcquire(osMutexId, osWaitForever);                                 // adquire mutex para inserção na fila de mensagem da thread control
       osMessageQueuePut(osControlMessageQueue_id, str, 0U, 0U);
       osMutexRelease(osMutexId);                                                // libera o mutex
