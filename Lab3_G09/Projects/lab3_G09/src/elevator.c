@@ -11,33 +11,6 @@
 
 int pos = 0;
 
-void elevatorInit(Elevator *elev, char name, osMessageQueueId_t osMessageQueue, osMessageQueueId_t osControlMsgQueueId){  
-  elev->level = 'a';
-  elev->nextLevel = 'a';
-  elev->name = name;
-  elev->state = STOPPED_OPEN_DOORS;
-  elev->osMessageQueue_id = osMessageQueue;
-  elev->osMsgControl_id = osControlMsgQueueId;
-}
-
-void elevatorTask(void *arg0){
-  char name = ((Elevator *)arg0)->name;
-  osMessageQueueId_t osMessageQueueId = ((Elevator *)arg0)->osMessageQueue_id;
-  osMessageQueueId_t osControlMsgQueueId = ((Elevator *)arg0)->osMsgControl_id;
-  Elevator elev;
-  elevatorInit(&elev, name, osMessageQueueId, osControlMsgQueueId );            // inicializa elevador
-  
-  char str[BUFFER], msg[5];
-  osStatus_t status;
-  while(1){
-    status = osMessageQueueGet(elev.osMessageQueue_id, msg, NULL, 0U);   // wait for message
-    if (status == osOK) {
-      changeState(&elev, msg, str);
-      osThreadYield();
-    }
-  }
-}// leftElevatorTask
-
 void goUp(char elev[], char * str) {
   char command[BUFFER] = "xs\r\0";
   command[0] = elev[0];  // qual elevador

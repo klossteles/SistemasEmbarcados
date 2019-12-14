@@ -29,28 +29,79 @@ const osMutexAttr_t Thread_Mutex_attr = {
   0U                                        // size for control block
 };
 
+Elevator elev_e, elev_c, elev_d;
+
+void centralElevatorTask(void *arg0){  
+  char str[BUFFER], msg[5];
+  osStatus_t status;
+  while(1){
+    status = osMessageQueueGet(elev_c.osMessageQueue_id, msg, NULL, 0U);   // wait for message
+    if (status == osOK) {
+      changeState(&elev_c, msg, str);
+      osThreadYield();
+    }
+  }
+}// centralElevatorTask
+
+void leftElevatorTask(void *arg0){
+  
+  char str[BUFFER], msg[5];
+  osStatus_t status;
+  while(1){
+    status = osMessageQueueGet(elev_e.osMessageQueue_id, msg, NULL, 0U);   // wait for message
+    if (status == osOK) {
+      changeState(&elev_e, msg, str);
+      osThreadYield();
+    }
+  }
+}// leftElevatorTask
+
+void rightElevatorTask(void *arg0){
+  
+  char str[BUFFER], msg[5];
+  osStatus_t status;
+  while(1){
+    status = osMessageQueueGet(elev_d.osMessageQueue_id, msg, NULL, 0U);   // wait for message
+    if (status == osOK) {
+      changeState(&elev_d, msg, str);
+      osThreadYield();
+    }
+  }
+}// rightElevatorTask
+
 void controlTask(void *arg0){
   char msg[BUFFER];
   osMessageQueueId_t controlMessageQueue = ((osMessageQueueId_t *)arg0);
   osMutexId = osMutexNew(&Thread_Mutex_attr);                                   // cria mutex para controle de inserção na fila
   
   osLeftElevatorMessageQueue_id = osMessageQueueNew(BUFFER, sizeof(msg), NULL);
-//  osRightElevatorMessageQueue_id = osMessageQueueNew(BUFFER, sizeof(msg), NULL);
-//  osCentralElevatorMessageQueue_id = osMessageQueueNew(BUFFER, sizeof(msg), NULL);
+  osRightElevatorMessageQueue_id = osMessageQueueNew(BUFFER, sizeof(msg), NULL);
+  osCentralElevatorMessageQueue_id = osMessageQueueNew(BUFFER, sizeof(msg), NULL);
   
-  Elevator elev;
-  elev.osMsgControl_id = controlMessageQueue;
-  elev.name = 'e';
-  elev.osMessageQueue_id = osLeftElevatorMessageQueue_id;
-  elevE_id = osThreadNew(elevatorTask, (void *)(&elev), NULL);                  //thread elevador esquerdo
+  elev_e.level = 'a';
+  elev_e.nextLevel = 'a';
+  elev_e.name = 'e';
+  elev_e.osMessageQueue_id = osLeftElevatorMessageQueue_id;
+  elev_e.osMsgControl_id = controlMessageQueue;
+  elev_e.state = STOPPED_OPEN_DOORS;
   
-//  elev.name = 'c';
-//  elev.osMessageQueue_id = osCentralElevatorMessageQueue_id;
-//  elevC_id = osThreadNew(elevatorTask, (void *)(&elev), NULL);                  //thread elevador central
-//  
-//  elev.name = 'd';
-//  elev.osMessageQueue_id = osRightElevatorMessageQueue_id;
-//  elevD_id = osThreadNew(elevatorTask, (void *)(&elev), NULL);                  //thread elevador direito
+  elev_c.level = 'a';
+  elev_c.nextLevel = 'a';
+  elev_c.name = 'c';
+  elev_c.osMessageQueue_id = osCentralElevatorMessageQueue_id;
+  elev_c.osMsgControl_id = controlMessageQueue;
+  elev_c.state = STOPPED_OPEN_DOORS;
+  
+  elev_d.level = 'a';
+  elev_d.nextLevel = 'a';
+  elev_d.name = 'd';
+  elev_d.osMessageQueue_id = osRightElevatorMessageQueue_id;
+  elev_d.osMsgControl_id = controlMessageQueue;
+  elev_d.state = STOPPED_OPEN_DOORS;
+
+  elevE_id = osThreadNew(leftElevatorTask, NULL, NULL);                         //thread elevador esquerdo
+  elevC_id = osThreadNew(centralElevatorTask, NULL, NULL);                      //thread elevador central
+  elevD_id = osThreadNew(rightElevatorTask, NULL, NULL);                        //thread elevador direito
   
   char uartEntry[5];
   char firstStr[] = "er\rcr\rdr\r";

@@ -27,8 +27,6 @@ typedef struct elevator{
     osMessageQueueId_t osMsgControl_id;
 } Elevator;
 
-void elevatorTask(void *arg0);
-void elevatorInit(Elevator *elev, char name, osMessageQueueId_t osMessageQueue, osMessageQueueId_t osControlMsgQueueId);
 void rule(char* param, Elevator elev);
 void goUp(char elev[], char * str);
 void goDown(char elev[], char * str);

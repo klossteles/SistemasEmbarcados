@@ -74,8 +74,11 @@ void UART0_Handler(void){
   UARTStdioIntHandler();
 } // UART0_Handler
 
-
-void app_main (void *argument) {
+int main (void){
+  SystemInit();
+  
+  osKernelInitialize();  
+  
   UARTInit();
   // cria fila de mensagens
   char msg[BUFFER];
@@ -83,18 +86,6 @@ void app_main (void *argument) {
   // cria thread responsável pela fila de mensagens e envio para uart.  
   messageControl_id = osThreadNew(controlMessageTask, NULL, NULL);
   control_id = osThreadNew(controlTask, (void*) osControlMessageQueue_id, NULL);                            //recebimento de dados da uart
-  
-  while(1) {
-    osDelay(osWaitForever);
-  }
-}// app_main
-
-int main (void){
-  SystemInit();
-  
-  osKernelInitialize();  
-  
-  osThreadNew(app_main, NULL, NULL);
   
   if(osKernelGetState() == osKernelReady)
     osKernelStart();
