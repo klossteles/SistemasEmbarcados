@@ -35,5 +35,5 @@ void closeDoor(char elev[], char * str);
 void openDoor(char elev[], char * str);
 void turnLightOn(char param[], char * str);
 void turnLightOff(char param[], char * str);
-char levelMap(int level);
+char strMap(char *str);
 #endif
