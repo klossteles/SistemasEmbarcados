@@ -7,7 +7,6 @@
 **/
 
 #include <string.h>
-#include "queue.h"
 #include "cmsis_os2.h" // CMSIS-RTOS
 
 #ifndef __ELEVATOR__
