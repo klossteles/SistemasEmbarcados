@@ -200,10 +200,12 @@ void changeState(Elevator *elev, char command[], char * str){
         char tmp[4] = "xp\r";
         tmp[0] = elev->name;
         elev->state = STOPPED_CLOSE_DOORS;
+        elev->level = currentLevel;
         osMutexAcquire(osMutexId, osWaitForever);
         osMessageQueuePut(elev->osMsgControl_id, tmp, 1, 0);
         openDoor(command, str);
         osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+        command[2] = elev->level;
         turnLightOff(command, str);
         osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
         osMutexRelease(osMutexId);

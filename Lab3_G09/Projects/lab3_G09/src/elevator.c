@@ -70,8 +70,7 @@ char strMap(char *str){
       case '9': return 'j';
       default: return '\0';
     }
-  }
-  else{
+  } else {
     switch(str[2]){
       case '0': return 'k';
       case '1': return 'l';
@@ -82,5 +81,4 @@ char strMap(char *str){
       default: return '\0';
     }
   }
-  return '\0';
 }
