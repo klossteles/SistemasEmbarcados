@@ -108,6 +108,11 @@ void controlTask(void *arg0){
   sendString(firstStr);
     
   while(1){
+    uartEntry[0]  = '\0';
+    uartEntry[1]  = '\0';
+    uartEntry[2]  = '\0';
+    uartEntry[3]  = '\0';
+    uartEntry[4]  = '\0';
     UARTgets(uartEntry, 5);
     switch(uartEntry[0]){
       case 'e': 
@@ -129,28 +134,31 @@ void controlTask(void *arg0){
 
 // essa função reage aos comandos enviados pelo simulador
 void changeState(Elevator *elev, char command[], char * str){
+  for(int i = 0; i < BUFFER; i++){
+    str[i] = '\0';
+  }
   switch(command[1]){
-     case 'I':
-        if(elev->state == STOPPED_OPEN_DOORS && elev->level != command[2] && (int)command[2] >= (int)'a' && 
-           (int)command[2] <= (int)'p' ){
-         elev->nextLevel = command[2];
-         closeDoor(command, str);
-         osMutexAcquire(osMutexId, osWaitForever);
-         osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
-         turnLightOn(command, str);
-         osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
-         osMutexRelease(osMutexId);
-         // precisa acender a luz
-       }
-       return;
+    case 'I':
+      if(elev->state == STOPPED_OPEN_DOORS && elev->level != command[2] && (int)command[2] >= (int)'a' && 
+                          (int)command[2] <= (int)'p' ){
+        elev->nextLevel = command[2];
+        closeDoor(command, str);
+        osMutexAcquire(osMutexId, osWaitForever);
+        osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+        turnLightOn(command, str);
+        osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+        osMutexRelease(osMutexId);
+        // precisa acender a luz
+      }
+      return;
       break;
-     case 'E':{
+    case 'E':{
       char tmpi[3] = "xx";
         tmpi[0] = command[2];
         tmpi[1] = command[3];
-        char requestLevel = levelMap(atoi(tmpi));
+        char requestLevel = strMap(tmpi);
         if(elev->state == STOPPED_OPEN_DOORS){
-          elev->nextLevel = levelMap(atoi(tmpi));
+          elev->nextLevel = strMap(tmpi);
           closeDoor(command, str);
           osMutexAcquire(osMutexId, osWaitForever);
           osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
@@ -158,75 +166,50 @@ void changeState(Elevator *elev, char command[], char * str){
         }
         return;
         break; 
-     }
-    case 'A':
-    break;
-    case 'F':
-    break;
-     default:{
-     char tmp[2] = "xx";
-      if (strlen(command) == 2) {
-        tmp[0] = '0';
-        tmp[1] = command[1];
-      } else if(strlen(command) == 3) {
-        tmp[0] = command[1];
-        tmp[1] = command[2]; 
-      }
-      char currentLevel = levelMap(atoi(tmp));
-      if (currentLevel == elev->nextLevel) {
-          stop(command, str);
-          osMutexAcquire(osMutexId, osWaitForever);
-          osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
-          openDoor(command, str);
-          osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
-          command[2] = currentLevel;
-          turnLightOff(command, str);
-          osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
-          osMutexRelease(osMutexId);
-      }  
-      break;
-     }
+    }
+    default: break;
   }
   switch(elev->state){
     case STOPPED_OPEN_DOORS:
-        // sinal de porta fechada recebido recebido
-        if(strlen(command) == 2 && command[0] == elev->name && command[1] == 'F'){
-          char tmp[4] = "xx\r";
-          tmp[0] = elev->name;
-          if((int)elev->level > (int)elev->nextLevel){
-            tmp[1] = 'd'; // descer
-            elev->state = GOING_DOWN;
-          } else {
-            tmp[1] = 's'; // subir
-            elev->state = GOING_UP;
-          }
-          osMutexAcquire(osMutexId, osWaitForever);
-          osMessageQueuePut(elev->osMsgControl_id, tmp, 1, 0);
-          osMutexRelease(osMutexId);
+      // sinal de porta fechada recebido recebido
+      if(command[0] == elev->name && command[1] == 'F'){
+        char tmp[4] = "xx\r";
+        tmp[0] = elev->name;
+        if((int)elev->level > (int)elev->nextLevel){
+          tmp[1] = 'd'; // descer
+          elev->state = GOING_DOWN;
+        } else {
+          tmp[1] = 's'; // subir
+          elev->state = GOING_UP;
         }
-        return;
-    break;
+        osMutexAcquire(osMutexId, osWaitForever);
+        osMessageQueuePut(elev->osMsgControl_id, tmp, 1, 0);
+        osMutexRelease(osMutexId);
+      }
+      return;
+      break;
     case STOPPED_CLOSE_DOORS:
-        if(command[0] == elev->name && command[1] == 'A'){ // aguarda a porta abrir
-          elev->state = STOPPED_OPEN_DOORS;
-        }
-        break;
-         case GOING_UP:
-         case GOING_DOWN:
-        if(strlen(command) == 2 && command[0] == elev->name && command[1] == elev->nextLevel){
-          char tmp[4] = "xp\r";
-          tmp[0] = elev->name;
-          elev->state = STOPPED_CLOSE_DOORS;
-          osMutexAcquire(osMutexId, osWaitForever);
-          osMessageQueuePut(elev->osMsgControl_id, tmp, 1, 0);
-          openDoor(command, str);
-          osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
-          turnLightOff(command, str);
-          osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
-          osMutexRelease(osMutexId);
-        }
-        return;
-    break;
+      if(command[0] == elev->name && command[1] == 'A'){ // aguarda a porta abrir
+        elev->state = STOPPED_OPEN_DOORS;
+      }
+      break;
+    case GOING_UP:
+    case GOING_DOWN:
+      char currentLevel = strMap(command);
+      if(command[0] == elev->name && currentLevel == elev->nextLevel){
+        char tmp[4] = "xp\r";
+        tmp[0] = elev->name;
+        elev->state = STOPPED_CLOSE_DOORS;
+        osMutexAcquire(osMutexId, osWaitForever);
+        osMessageQueuePut(elev->osMsgControl_id, tmp, 1, 0);
+        openDoor(command, str);
+        osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+        turnLightOff(command, str);
+        osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+        osMutexRelease(osMutexId);
+      }
+      return;
+      break;
     default: break;
   }
 }

@@ -7,7 +7,6 @@
 **/
 
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "system_TM4C1294.h"

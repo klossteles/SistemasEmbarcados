@@ -55,23 +55,32 @@ void turnLightOff(char param[], char * str) {
   strcpy(str, command);
 }
 
-char levelMap(int level){
-  switch(level){
-    case 0: return 'a';
-    case 1: return 'b';
-    case 2: return 'c';
-    case 3: return 'd';
-    case 4: return 'e';
-    case 5: return 'f';
-    case 6: return 'g';
-    case 7: return 'h';
-    case 8: return 'i';
-    case 9: return 'j';
-    case 10: return 'k';
-    case 11: return 'l';
-    case 12: return 'm';
-    case 13: return 'n';
-    case 14: return 'o';
-    default: return 'p';
+char strMap(char *str){
+  if(str[2] == '\0'){
+    switch(str[1]){
+      case '0': return 'a';
+      case '1': return 'b';
+      case '2': return 'c';
+      case '3': return 'd';
+      case '4': return 'e';
+      case '5': return 'f';
+      case '6': return 'g';
+      case '7': return 'h';
+      case '8': return 'i';
+      case '9': return 'j';
+      default: return '\0';
+    }
   }
+  else{
+    switch(str[2]){
+      case '0': return 'k';
+      case '1': return 'l';
+      case '2': return 'm';
+      case '3': return 'n';
+      case '4': return 'o';
+      case '5': return 'p';
+      default: return '\0';
+    }
+  }
+  return '\0';
 }
