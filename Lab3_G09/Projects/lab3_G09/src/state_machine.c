@@ -19,6 +19,8 @@
 #include "elevator.h"
 #include "string_utils.h"
 
+uint32_t tickCount;
+
 osThreadId_t elevE_id, elevC_id, elevD_id;
 osMessageQueueId_t osRightElevatorMessageQueue_id, osLeftElevatorMessageQueue_id, osCentralElevatorMessageQueue_id;
 osMutexId_t osMutexId;
@@ -71,6 +73,7 @@ void rightElevatorTask(void *arg0){
 
 void controlTask(void *arg0){
   char msg[BUFFER];
+  tickCount = osKernelGetTickCount();
   osMessageQueueId_t controlMessageQueue = ((osMessageQueueId_t *)arg0);
   osMutexId = osMutexNew(&Thread_Mutex_attr);                                   // cria mutex para controle de inserção na fila
   
@@ -79,21 +82,27 @@ void controlTask(void *arg0){
   osCentralElevatorMessageQueue_id = osMessageQueueNew(BUFFER, sizeof(msg), NULL);
   
   elev_e.level = 'a';
-  elev_e.nextLevel = 'a';
+  for (uint8_t i = 0; i < 15 ; i++) {
+    elev_e.nextLevelArr[i] = 'r';
+  }
   elev_e.name = 'e';
   elev_e.osMessageQueue_id = osLeftElevatorMessageQueue_id;
   elev_e.osMsgControl_id = controlMessageQueue;
   elev_e.state = STOPPED_OPEN_DOORS;
   
   elev_c.level = 'a';
-  elev_c.nextLevel = 'a';
+  for (uint8_t i = 0; i < 15 ; i++) {
+    elev_c.nextLevelArr[i] = 'r';
+  }
   elev_c.name = 'c';
   elev_c.osMessageQueue_id = osCentralElevatorMessageQueue_id;
   elev_c.osMsgControl_id = controlMessageQueue;
   elev_c.state = STOPPED_OPEN_DOORS;
   
   elev_d.level = 'a';
-  elev_d.nextLevel = 'a';
+  for (uint8_t i = 0; i < 15 ; i++) {
+    elev_d.nextLevelArr[i] = 'r';
+  }
   elev_d.name = 'd';
   elev_d.osMessageQueue_id = osRightElevatorMessageQueue_id;
   elev_d.osMsgControl_id = controlMessageQueue;
@@ -141,7 +150,7 @@ void changeState(Elevator *elev, char command[], char * str){
     case 'I':
       if(elev->state == STOPPED_OPEN_DOORS && elev->level != command[2] && (int)command[2] >= (int)'a' && 
                           (int)command[2] <= (int)'p' ){
-        elev->nextLevel = command[2];
+        addElementToQueue(elev, command[2]);
         closeDoor(command, str);
         osMutexAcquire(osMutexId, osWaitForever);
         osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
@@ -149,23 +158,36 @@ void changeState(Elevator *elev, char command[], char * str){
         osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
         osMutexRelease(osMutexId);
         // precisa acender a luz
+      } else if ((elev->state == GOING_UP || elev->state == GOING_DOWN) && elev->level != command[2] && (int)command[2] >= (int)'a' && 
+                 (int)command[2] <= (int)'p' ){
+        addElementToQueue(elev, command[2]);
+        osMutexAcquire(osMutexId, osWaitForever);
+        osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+        turnLightOn(command, str);
+        osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+        osMutexRelease(osMutexId);
       }
       return;
       break;
     case 'E':{
       char tmpi[3] = "xx";
-        tmpi[0] = command[2];
-        tmpi[1] = command[3];
-        char requestLevel = strMap(tmpi);
-        if(elev->state == STOPPED_OPEN_DOORS){
-          elev->nextLevel = strMap(tmpi);
-          closeDoor(command, str);
-          osMutexAcquire(osMutexId, osWaitForever);
-          osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
-          osMutexRelease(osMutexId);
-        }
-        return;
-        break; 
+      tmpi[0] = command[2];
+      tmpi[1] = command[3];
+      char requestLevel = strMap(tmpi);
+      if(elev->state == STOPPED_OPEN_DOORS){
+        closeDoor(command, str);
+        osMutexAcquire(osMutexId, osWaitForever);
+        osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+        osMutexRelease(osMutexId);
+      } else if ((elev->state == GOING_UP || elev->state == GOING_DOWN)) {
+        addElementToQueue(elev, strMap(tmpi));
+        closeDoor(command, str);
+        osMutexAcquire(osMutexId, osWaitForever);
+        osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+        osMutexRelease(osMutexId);
+      }
+      return;
+      break; 
     }
     default: break;
   }
@@ -175,7 +197,7 @@ void changeState(Elevator *elev, char command[], char * str){
       if(command[0] == elev->name && command[1] == 'F'){
         char tmp[4] = "xx\r";
         tmp[0] = elev->name;
-        if((int)elev->level > (int)elev->nextLevel){
+        if((int)elev->level > (int)elev->nextLevelArr[0]){
           tmp[1] = 'd'; // descer
           elev->state = GOING_DOWN;
         } else {
@@ -191,12 +213,21 @@ void changeState(Elevator *elev, char command[], char * str){
     case STOPPED_CLOSE_DOORS:
       if(command[0] == elev->name && command[1] == 'A'){ // aguarda a porta abrir
         elev->state = STOPPED_OPEN_DOORS;
+        removeFirstElementFromQueue(elev);
+        if (elev->nextLevelArr[0] != 'r') {
+          tickCount = osKernelGetTickCount();
+          closeDoor(command, str);
+          osDelayUntil(2000 + tickCount);
+          osMutexAcquire(osMutexId, osWaitForever);
+          osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+          osMutexRelease(osMutexId);
+        }
       }
       break;
     case GOING_UP:
     case GOING_DOWN:
       char currentLevel = strMap(command);
-      if(command[0] == elev->name && currentLevel == elev->nextLevel){
+      if(command[0] == elev->name && currentLevel == elev->nextLevelArr[0]){
         char tmp[4] = "xp\r";
         tmp[0] = elev->name;
         elev->state = STOPPED_CLOSE_DOORS;

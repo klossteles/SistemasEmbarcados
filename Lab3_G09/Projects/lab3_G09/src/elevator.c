@@ -82,3 +82,19 @@ char strMap(char *str){
     }
   }
 }
+
+void addElementToQueue(Elevator *elev, char elem) {
+  for (uint8_t i = 0; i < 15 ; i++) {
+    if (elev->nextLevelArr[i] == 'r') {
+      elev->nextLevelArr[i] = elem;
+      break;
+    }
+  }
+}
+
+void removeFirstElementFromQueue(Elevator *elev) {
+  for (uint8_t i = 0; i < 15; i++) {
+    elev->nextLevelArr[i] = elev->nextLevelArr[i+1];
+  }
+  elev->nextLevelArr[14] = 'r';
+}

@@ -14,11 +14,9 @@
 
 #define BUFFER 10
 
-//queue_t controlList; //todo: trocar por queue
-
 typedef struct elevator{
     char level;
-    char nextLevel;
+    char nextLevelArr[15];
     char name;
     // ver state_machine.h
     int state;
@@ -35,4 +33,6 @@ void openDoor(char elev[], char * str);
 void turnLightOn(char param[], char * str);
 void turnLightOff(char param[], char * str);
 char strMap(char *str);
+void addElementToQueue(Elevator *elev, char elem);
+void removeFirstElementFromQueue(Elevator *elev);
 #endif
