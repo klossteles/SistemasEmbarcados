@@ -16,10 +16,12 @@
 
 typedef struct elevator{
     char level;
-    char nextLevelArr[15];
+    char upNextLevel[15];
+    char downNextLevel[15];
     char name;
     // ver state_machine.h
     int state;
+    int prevMovState;
     osMessageQueueId_t osMessageQueue_id;
     osMessageQueueId_t osMsgControl_id;
 } Elevator;

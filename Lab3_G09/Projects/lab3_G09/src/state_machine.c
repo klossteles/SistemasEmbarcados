@@ -83,31 +83,37 @@ void controlTask(void *arg0){
   
   elev_e.level = 'a';
   for (uint8_t i = 0; i < 15 ; i++) {
-    elev_e.nextLevelArr[i] = 'r';
+    elev_e.upNextLevel[i] = 'r';
+    elev_e.downNextLevel[i] = 'r';
   }
   elev_e.name = 'e';
   elev_e.osMessageQueue_id = osLeftElevatorMessageQueue_id;
   elev_e.osMsgControl_id = controlMessageQueue;
   elev_e.state = STOPPED_OPEN_DOORS;
+  elev_e.prevMovState = GOING_UP;
   
   elev_c.level = 'a';
   for (uint8_t i = 0; i < 15 ; i++) {
-    elev_c.nextLevelArr[i] = 'r';
+    elev_c.upNextLevel[i] = 'r';
+    elev_c.downNextLevel[i] = 'r';
   }
   elev_c.name = 'c';
   elev_c.osMessageQueue_id = osCentralElevatorMessageQueue_id;
   elev_c.osMsgControl_id = controlMessageQueue;
   elev_c.state = STOPPED_OPEN_DOORS;
+  elev_c.prevMovState = GOING_UP;
   
   elev_d.level = 'a';
   for (uint8_t i = 0; i < 15 ; i++) {
-    elev_d.nextLevelArr[i] = 'r';
+    elev_d.upNextLevel[i] = 'r';
+    elev_d.downNextLevel[i] = 'r';
   }
   elev_d.name = 'd';
   elev_d.osMessageQueue_id = osRightElevatorMessageQueue_id;
   elev_d.osMsgControl_id = controlMessageQueue;
   elev_d.state = STOPPED_OPEN_DOORS;
-
+  elev_d.prevMovState = GOING_UP;
+  
   elevE_id = osThreadNew(leftElevatorTask, NULL, NULL);                         //thread elevador esquerdo
   elevC_id = osThreadNew(centralElevatorTask, NULL, NULL);                      //thread elevador central
   elevD_id = osThreadNew(rightElevatorTask, NULL, NULL);                        //thread elevador direito
@@ -197,12 +203,18 @@ void changeState(Elevator *elev, char command[], char * str){
       if(command[0] == elev->name && command[1] == 'F'){
         char tmp[4] = "xx\r";
         tmp[0] = elev->name;
-        if((int)elev->level > (int)elev->nextLevelArr[0]){
-          tmp[1] = 'd'; // descer
-          elev->state = GOING_DOWN;
-        } else {
+        if (elev->prevMovState == GOING_UP && elev->upNextLevel[0] != 'r') {    // necessário para saber se continua subindo ou começa descida
           tmp[1] = 's'; // subir
           elev->state = GOING_UP;
+        } else if (elev->prevMovState == GOING_DOWN && elev->downNextLevel[0] != 'r') {
+          tmp[1] = 'd'; // descer
+          elev->state = GOING_DOWN;
+        } else if (elev->upNextLevel[0] != 'r') {
+          tmp[1] = 's'; // subir
+          elev->state = GOING_UP;
+        } else {
+          tmp[1] = 'd'; // descer
+          elev->state = GOING_DOWN;
         }
         osMutexAcquire(osMutexId, osWaitForever);
         osMessageQueuePut(elev->osMsgControl_id, tmp, 1, 0);
@@ -214,7 +226,7 @@ void changeState(Elevator *elev, char command[], char * str){
       if(command[0] == elev->name && command[1] == 'A'){ // aguarda a porta abrir
         elev->state = STOPPED_OPEN_DOORS;
         removeFirstElementFromQueue(elev);
-        if (elev->nextLevelArr[0] != 'r') {
+        if (elev->upNextLevel[0] != 'r' || elev->downNextLevel[0] != 'r') {
           tickCount = osKernelGetTickCount();
           closeDoor(command, str);
           osDelayUntil(2000 + tickCount);
@@ -227,9 +239,10 @@ void changeState(Elevator *elev, char command[], char * str){
     case GOING_UP:
     case GOING_DOWN:
       char currentLevel = strMap(command);
-      if(command[0] == elev->name && currentLevel == elev->nextLevelArr[0]){
+      if(command[0] == elev->name && ((elev->state == GOING_UP && currentLevel == elev->upNextLevel[0]) || (elev->state == GOING_DOWN && currentLevel == elev->downNextLevel[0]))){
         char tmp[4] = "xp\r";
         tmp[0] = elev->name;
+        elev->prevMovState = elev->state;
         elev->state = STOPPED_CLOSE_DOORS;
         elev->level = currentLevel;
         osMutexAcquire(osMutexId, osWaitForever);

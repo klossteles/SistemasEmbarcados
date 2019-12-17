@@ -83,18 +83,40 @@ char strMap(char *str){
   }
 }
 
-void addElementToQueue(Elevator *elev, char elem) {
-  for (uint8_t i = 0; i < 15 ; i++) {
-    if (elev->nextLevelArr[i] == 'r') {
-      elev->nextLevelArr[i] = elem;
-      break;
+void addElementToQueue(Elevator *elev, char elem) {    
+  if ((int)elev->level < (int)elem) {
+     for (uint8_t i = 0; i < 15 ; i++) {
+      if (elev->upNextLevel[i] == 'r') {
+        elev->upNextLevel[i] = elem;
+        //todo: ordenar array
+        break;
+      }
+    } 
+  } else {
+    for (uint8_t i = 0; i < 15 ; i++) {
+      if (elev->downNextLevel[i] == 'r') {
+        elev->downNextLevel[i] = elem;
+        //todo: ordenar array
+        break;
+      }
     }
   }
 }
 
 void removeFirstElementFromQueue(Elevator *elev) {
-  for (uint8_t i = 0; i < 15; i++) {
-    elev->nextLevelArr[i] = elev->nextLevelArr[i+1];
+  switch(elev->prevMovState){
+   case GOING_UP:
+      for (uint8_t i = 0; i < 15; i++) {
+        elev->upNextLevel[i] = elev->upNextLevel[i+1];
+      }
+      elev->upNextLevel[14] = 'r'; 
+   break;
+     case GOING_DOWN:   
+      for (uint8_t i = 0; i < 15; i++) {
+        elev->downNextLevel[i] = elev->downNextLevel[i+1];
+      }
+      elev->downNextLevel[14] = 'r';  
+   break;
+   default: break;
   }
-  elev->nextLevelArr[14] = 'r';
 }
