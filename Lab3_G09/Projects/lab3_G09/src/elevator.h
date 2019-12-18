@@ -37,4 +37,5 @@ void turnLightOff(char param[], char * str);
 char strMap(char *str);
 void addElementToQueue(Elevator *elev, char elem);
 void removeFirstElementFromQueue(Elevator *elev);
+int cmpfunc (const void * a, const void * b);
 #endif

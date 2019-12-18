@@ -181,6 +181,7 @@ void changeState(Elevator *elev, char command[], char * str){
       tmpi[1] = command[3];
       char requestLevel = strMap(tmpi);
       if(elev->state == STOPPED_OPEN_DOORS){
+        addElementToQueue(elev, strMap(tmpi));
         closeDoor(command, str);
         osMutexAcquire(osMutexId, osWaitForever);
         osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);

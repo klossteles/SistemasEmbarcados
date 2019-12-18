@@ -8,6 +8,7 @@
 
 #include "elevator.h"
 #include "state_machine.h"
+#include <stdlib.h>
 
 int pos = 0;
 
@@ -83,23 +84,28 @@ char strMap(char *str){
   }
 }
 
-void addElementToQueue(Elevator *elev, char elem) {    
+void addElementToQueue(Elevator *elev, char elem) {
+  char tmp[15];
   if ((int)elev->level < (int)elem) {
      for (uint8_t i = 0; i < 15 ; i++) {
       if (elev->upNextLevel[i] == 'r') {
         elev->upNextLevel[i] = elem;
-        //todo: ordenar array
         break;
       }
-    } 
+    }
+//    strncpy(tmp, elev->upNextLevel, 15);
+//    qsort(tmp, 15, sizeof(char), cmpfunc);
+//    for (uint8_t i = 0; i < 15 ; i++) {
+//      elev->upNextLevel[i] = tmp[i];
+//    }
   } else {
     for (uint8_t i = 0; i < 15 ; i++) {
       if (elev->downNextLevel[i] == 'r') {
         elev->downNextLevel[i] = elem;
-        //todo: ordenar array
         break;
       }
     }
+    //todo: ordenar array
   }
 }
 
@@ -119,4 +125,8 @@ void removeFirstElementFromQueue(Elevator *elev) {
    break;
    default: break;
   }
+}
+
+int cmpfunc (const void * a, const void * b) {
+   return ( *(char*)a - *(char*)b );
 }
