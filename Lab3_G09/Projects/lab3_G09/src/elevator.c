@@ -8,7 +8,6 @@
 
 #include "elevator.h"
 #include "state_machine.h"
-#include <stdlib.h>
 
 int pos = 0;
 
@@ -59,74 +58,113 @@ void turnLightOff(char param[], char * str) {
 char strMap(char *str){
   if(str[2] == '\0'){
     switch(str[1]){
-      case '0': return 'a';
-      case '1': return 'b';
-      case '2': return 'c';
-      case '3': return 'd';
-      case '4': return 'e';
-      case '5': return 'f';
-      case '6': return 'g';
-      case '7': return 'h';
-      case '8': return 'i';
-      case '9': return 'j';
-      default: return '\0';
+       case '0': return 'a';
+       case '1': return 'b';
+       case '2': return 'c';
+       case '3': return 'd';
+       case '4': return 'e';
+       case '5': return 'f';
+       case '6': return 'g';
+       case '7': return 'h';
+       case '8': return 'i';
+       case '9': return 'j';
+       default: return '\0';
     }
   } else {
     switch(str[2]){
-      case '0': return 'k';
-      case '1': return 'l';
-      case '2': return 'm';
-      case '3': return 'n';
-      case '4': return 'o';
-      case '5': return 'p';
-      default: return '\0';
+       case '0': return 'k';
+       case '1': return 'l';
+       case '2': return 'm';
+       case '3': return 'n';
+       case '4': return 'o';
+       case '5': return 'p';
+       default: return '\0';
     }
   }
 }
 
-void addElementToQueue(Elevator *elev, char elem) {
-  char tmp[15];
-  if ((int)elev->level < (int)elem) {
-     for (uint8_t i = 0; i < 15 ; i++) {
-      if (elev->upNextLevel[i] == 'r') {
-        elev->upNextLevel[i] = elem;
-        break;
-      }
-    }
-//    strncpy(tmp, elev->upNextLevel, 15);
-//    qsort(tmp, 15, sizeof(char), cmpfunc);
-//    for (uint8_t i = 0; i < 15 ; i++) {
-//      elev->upNextLevel[i] = tmp[i];
-//    }
-  } else {
-    for (uint8_t i = 0; i < 15 ; i++) {
-      if (elev->downNextLevel[i] == 'r') {
-        elev->downNextLevel[i] = elem;
-        break;
-      }
-    }
-    //todo: ordenar array
+void addElementToQueue(Elevator *elev, int level) {
+  elev->nextLevel[level] = 1;
+}
+
+void removeElementFromQueue(Elevator *elev, int level) {
+  elev->nextLevel[level] = 0;
+}
+
+int levelCharToInt(char level){
+  switch(level) {
+     case 'a': return 0;
+     case 'b': return 1;
+     case 'c': return 2;
+     case 'd': return 3;
+     case 'e': return 4;
+     case 'f': return 5;
+     case 'g': return 6;
+     case 'h': return 7;
+     case 'i': return 8;
+     case 'j': return 9;
+     case 'k': return 10;
+     case 'l': return 11;
+     case 'm': return 12;
+     case 'n': return 13;
+     case 'o': return 14;
+     case 'p': return 15;
+     default: return -1;     
   }
 }
 
-void removeFirstElementFromQueue(Elevator *elev) {
-  switch(elev->prevMovState){
-   case GOING_UP:
-      for (uint8_t i = 0; i < 15; i++) {
-        elev->upNextLevel[i] = elev->upNextLevel[i+1];
-      }
-      elev->upNextLevel[14] = 'r'; 
-   break;
-     case GOING_DOWN:   
-      for (uint8_t i = 0; i < 15; i++) {
-        elev->downNextLevel[i] = elev->downNextLevel[i+1];
-      }
-      elev->downNextLevel[14] = 'r';  
-   break;
-   default: break;
+char levelIntToChar(int level) {
+  switch(level) {
+     case 0: return 'a';
+     case 1: return 'b';
+     case 2: return 'c';
+     case 3: return 'd';
+     case 4: return 'e';
+     case 5: return 'f';
+     case 6: return 'g';
+     case 7: return 'h';
+     case 8: return 'i';
+     case 9: return 'j';
+     case 10: return 'k';
+     case 11: return 'l';
+     case 12: return 'm';
+     case 13: return 'n';
+     case 14: return 'o';
+     case 15: return 'p';
+     default: return '\0';     
   }
 }
 
-int cmpfunc (const void * a, const void * b) {
-   return ( *(char*)a - *(char*)b );
+void getElevatorNextMovement(Elevator *elev, char * str){
+  int currentLevel = levelCharToInt(elev->level);
+  //mantém orientação do elevador
+  if (elev->prevMovState == GOING_UP) {
+    for (uint8_t i = currentLevel ; i < 15 ; i++ ) {
+      if (elev->nextLevel[i] == 1) {
+        str[1] = 's';
+        elev->state = GOING_UP;
+        return;
+      }
+    }
+  } else if (elev->prevMovState == GOING_DOWN) {
+    for (uint8_t i = 0 ; i < currentLevel  ; i++ ) {
+      if (elev->nextLevel[i] == 1) {
+        str[1] = 'd';
+        elev->state = GOING_DOWN;
+        return;
+      }
+    }
+  }
+  for (uint8_t i = 0 ; i < 15 ; i++ ) {
+    if (elev->nextLevel[i] == 1) {
+      if (i < currentLevel) {
+        str[1] = 'd';
+        elev->state = GOING_DOWN;  
+      } else {
+        str[1] = 's';
+        elev->state = GOING_UP;  
+      }
+      return;
+    }
+  }  
 }

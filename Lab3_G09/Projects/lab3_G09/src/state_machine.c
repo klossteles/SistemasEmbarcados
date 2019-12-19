@@ -83,8 +83,7 @@ void controlTask(void *arg0){
   
   elev_e.level = 'a';
   for (uint8_t i = 0; i < 15 ; i++) {
-    elev_e.upNextLevel[i] = 'r';
-    elev_e.downNextLevel[i] = 'r';
+    elev_e.nextLevel[i] = 0;
   }
   elev_e.name = 'e';
   elev_e.osMessageQueue_id = osLeftElevatorMessageQueue_id;
@@ -94,8 +93,7 @@ void controlTask(void *arg0){
   
   elev_c.level = 'a';
   for (uint8_t i = 0; i < 15 ; i++) {
-    elev_c.upNextLevel[i] = 'r';
-    elev_c.downNextLevel[i] = 'r';
+    elev_c.nextLevel[i] = 0;
   }
   elev_c.name = 'c';
   elev_c.osMessageQueue_id = osCentralElevatorMessageQueue_id;
@@ -105,8 +103,7 @@ void controlTask(void *arg0){
   
   elev_d.level = 'a';
   for (uint8_t i = 0; i < 15 ; i++) {
-    elev_d.upNextLevel[i] = 'r';
-    elev_d.downNextLevel[i] = 'r';
+    elev_d.nextLevel[i] = 0;
   }
   elev_d.name = 'd';
   elev_d.osMessageQueue_id = osRightElevatorMessageQueue_id;
@@ -121,7 +118,7 @@ void controlTask(void *arg0){
   char uartEntry[5];
   char firstStr[] = "er\rcr\rdr\r";
   sendString(firstStr);
-    
+  
   while(1){
     uartEntry[0]  = '\0';
     uartEntry[1]  = '\0';
@@ -130,18 +127,18 @@ void controlTask(void *arg0){
     uartEntry[4]  = '\0';
     UARTgets(uartEntry, 5);
     switch(uartEntry[0]){
-      case 'e': 
-        osMessageQueuePut(osLeftElevatorMessageQueue_id, uartEntry, 1, 0);
+       case 'e': 
+      osMessageQueuePut(osLeftElevatorMessageQueue_id, uartEntry, 1, 0);
       break;
-     case 'c': 
-        osMessageQueuePut(osCentralElevatorMessageQueue_id, uartEntry, 1, 0);
+       case 'c': 
+      osMessageQueuePut(osCentralElevatorMessageQueue_id, uartEntry, 1, 0);
       break;
-     case 'd': 
-        osMessageQueuePut(osRightElevatorMessageQueue_id, uartEntry, 1, 0);
+       case 'd': 
+      osMessageQueuePut(osRightElevatorMessageQueue_id, uartEntry, 1, 0);
       break;
-     default:
-        printf("ERROR %s\n", uartEntry);
-        break;
+       default:
+      printf("ERROR %s\n", uartEntry);
+      break;
     }
     osThreadYield();
   };  
@@ -153,110 +150,147 @@ void changeState(Elevator *elev, char command[], char * str){
     str[i] = '\0';
   }
   switch(command[1]){
-    case 'I':
-      if(elev->state == STOPPED_OPEN_DOORS && elev->level != command[2] && (int)command[2] >= (int)'a' && 
-                          (int)command[2] <= (int)'p' ){
-        addElementToQueue(elev, command[2]);
-        closeDoor(command, str);
-        osMutexAcquire(osMutexId, osWaitForever);
-        osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
-        turnLightOn(command, str);
-        osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
-        osMutexRelease(osMutexId);
-        // precisa acender a luz
-      } else if ((elev->state == GOING_UP || elev->state == GOING_DOWN) && elev->level != command[2] && (int)command[2] >= (int)'a' && 
-                 (int)command[2] <= (int)'p' ){
-        addElementToQueue(elev, command[2]);
-        osMutexAcquire(osMutexId, osWaitForever);
-        osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
-        turnLightOn(command, str);
-        osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
-        osMutexRelease(osMutexId);
-      }
-      return;
-      break;
-    case 'E':{
-      char tmpi[3] = "xx";
-      tmpi[0] = command[2];
-      tmpi[1] = command[3];
-      char requestLevel = strMap(tmpi);
-      if(elev->state == STOPPED_OPEN_DOORS){
-        addElementToQueue(elev, strMap(tmpi));
-        closeDoor(command, str);
-        osMutexAcquire(osMutexId, osWaitForever);
-        osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
-        osMutexRelease(osMutexId);
-      } else if ((elev->state == GOING_UP || elev->state == GOING_DOWN)) {
-        addElementToQueue(elev, strMap(tmpi));
-        closeDoor(command, str);
-        osMutexAcquire(osMutexId, osWaitForever);
-        osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
-        osMutexRelease(osMutexId);
-      }
-      return;
-      break; 
-    }
-    default: break;
+     case 'I':
+    if(elev->state == STOPPED_OPEN_DOORS && elev->level != command[2] && (int)command[2] >= (int)'a' && 
+       (int)command[2] <= (int)'p' ){
+         addElementToQueue(elev, levelCharToInt(command[2]));
+         closeDoor(command, str);                                                // close door
+         osMutexAcquire(osMutexId, osWaitForever);
+         osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+         turnLightOn(command, str);                                              // turn light on
+         osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+         osMutexRelease(osMutexId);
+       } else if ((elev->state == GOING_UP || elev->state == GOING_DOWN) && elev->level != command[2] && (int)command[2] >= (int)'a' && 
+                  (int)command[2] <= (int)'p' ){
+                    addElementToQueue(elev, levelCharToInt(command[2]));
+                    osMutexAcquire(osMutexId, osWaitForever);
+                    osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+                    turnLightOn(command, str);                                              // turn light on
+                    osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+                    osMutexRelease(osMutexId);
+                  }
+    return;
+    break;
+     case 'E':{
+       char tmpi[3] = "xx";
+       if (command[2] == '0' && command[1] != '1') {
+         tmpi[1] = command[3];
+       } else {
+         tmpi[1] = command[2];
+         tmpi[2] = command[3]; 
+       }
+       char requestedLevel = strMap(tmpi);
+       if(elev->state == STOPPED_OPEN_DOORS){
+         addElementToQueue(elev, levelCharToInt(requestedLevel));
+         closeDoor(command, str);
+         osMutexAcquire(osMutexId, osWaitForever);
+         osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+         osMutexRelease(osMutexId);
+       } else if ((elev->state == GOING_UP || elev->state == GOING_DOWN)) {
+         addElementToQueue(elev, levelCharToInt(requestedLevel));
+         closeDoor(command, str);
+         osMutexAcquire(osMutexId, osWaitForever);
+         osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+         osMutexRelease(osMutexId);
+       }
+       return;
+       break; 
+     }
+     default: break;
   }
   switch(elev->state){
-    case STOPPED_OPEN_DOORS:
-      // sinal de porta fechada recebido recebido
-      if(command[0] == elev->name && command[1] == 'F'){
-        char tmp[4] = "xx\r";
-        tmp[0] = elev->name;
-        if (elev->prevMovState == GOING_UP && elev->upNextLevel[0] != 'r') {    // necessário para saber se continua subindo ou começa descida
-          tmp[1] = 's'; // subir
-          elev->state = GOING_UP;
-        } else if (elev->prevMovState == GOING_DOWN && elev->downNextLevel[0] != 'r') {
-          tmp[1] = 'd'; // descer
-          elev->state = GOING_DOWN;
-        } else if (elev->upNextLevel[0] != 'r') {
-          tmp[1] = 's'; // subir
-          elev->state = GOING_UP;
-        } else {
-          tmp[1] = 'd'; // descer
-          elev->state = GOING_DOWN;
-        }
-        osMutexAcquire(osMutexId, osWaitForever);
-        osMessageQueuePut(elev->osMsgControl_id, tmp, 1, 0);
-        osMutexRelease(osMutexId);
-      }
-      return;
-      break;
-    case STOPPED_CLOSE_DOORS:
-      if(command[0] == elev->name && command[1] == 'A'){ // aguarda a porta abrir
-        elev->state = STOPPED_OPEN_DOORS;
-        removeFirstElementFromQueue(elev);
-        if (elev->upNextLevel[0] != 'r' || elev->downNextLevel[0] != 'r') {
-          tickCount = osKernelGetTickCount();
-          closeDoor(command, str);
-          osDelayUntil(2000 + tickCount);
-          osMutexAcquire(osMutexId, osWaitForever);
-          osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
-          osMutexRelease(osMutexId);
-        }
-      }
-      break;
-    case GOING_UP:
-    case GOING_DOWN:
-      char currentLevel = strMap(command);
-      if(command[0] == elev->name && ((elev->state == GOING_UP && currentLevel == elev->upNextLevel[0]) || (elev->state == GOING_DOWN && currentLevel == elev->downNextLevel[0]))){
-        char tmp[4] = "xp\r";
-        tmp[0] = elev->name;
-        elev->prevMovState = elev->state;
-        elev->state = STOPPED_CLOSE_DOORS;
-        elev->level = currentLevel;
-        osMutexAcquire(osMutexId, osWaitForever);
-        osMessageQueuePut(elev->osMsgControl_id, tmp, 1, 0);
-        openDoor(command, str);
-        osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
-        command[2] = elev->level;
-        turnLightOff(command, str);
-        osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
-        osMutexRelease(osMutexId);
-      }
-      return;
-      break;
-    default: break;
+     case STOPPED_OPEN_DOORS:
+    // sinal de porta fechada recebido recebido
+    if(command[0] == elev->name && command[1] == 'F'){
+      char tmp[4] = "xx\r";
+      tmp[0] = elev->name;
+      getElevatorNextMovement(elev, tmp);
+      osMutexAcquire(osMutexId, osWaitForever);
+      osMessageQueuePut(elev->osMsgControl_id, tmp, 1, 0);
+      osMutexRelease(osMutexId);
+    }
+    return;
+    break;
+     case STOPPED_CLOSE_DOORS:{
+       if(command[0] == elev->name && command[1] == 'A'){ // aguarda a porta abrir
+         elev->state = STOPPED_OPEN_DOORS;
+         removeElementFromQueue(elev, levelCharToInt(elev->level));
+         uint8_t cont = 0;
+         for (uint8_t i = 0 ; i < 15 ; i++) {
+           if (elev->nextLevel[i] == 1) {
+             cont = 1;
+             break;
+           }
+         }
+         if (cont == 1) {
+           tickCount = osKernelGetTickCount();
+           closeDoor(command, str);
+           osDelayUntil(2000 + tickCount);
+           osMutexAcquire(osMutexId, osWaitForever);
+           osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+           osMutexRelease(osMutexId);
+         }
+       }
+       break;
+     }
+     case GOING_UP:{
+       char tmpi[2] = "xx";
+       if (command[2] != '\0') {
+         tmpi[0] = command[1];
+         tmpi[1] = command[2];
+       } else {
+         tmpi[0] = '0';
+         tmpi[1] = command[1];
+       }
+       int currentLevel = atoi(tmpi);
+       char level = levelIntToChar(currentLevel);
+       if(command[0] == elev->name && elev->nextLevel[currentLevel] == 1){
+         char tmp[4] = "xp\r";
+         tmp[0] = elev->name;
+         elev->prevMovState = elev->state;
+         elev->state = STOPPED_CLOSE_DOORS;
+         elev->level = level;
+         osMutexAcquire(osMutexId, osWaitForever);
+         osMessageQueuePut(elev->osMsgControl_id, tmp, 1, 0);
+         openDoor(command, str);
+         osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+         command[2] = elev->level;
+         turnLightOff(command, str);
+         osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+         osMutexRelease(osMutexId);
+       }
+       return;
+       break;
+     }
+     case GOING_DOWN: {
+       char tmpi[2] = "xx";
+       if (command[2] != '\0') {
+         tmpi[0] = command[1];
+         tmpi[1] = command[2];
+       } else {
+         tmpi[0] = '0';
+         tmpi[1] = command[1];
+       }
+       int currentLevel = atoi(tmpi);
+       char level = levelIntToChar(currentLevel);
+       if(command[0] == elev->name && elev->nextLevel[currentLevel] == 1){
+         char tmp[4] = "xp\r";
+         tmp[0] = elev->name;
+         elev->prevMovState = elev->state;
+         elev->state = STOPPED_CLOSE_DOORS;
+         elev->level = level;
+         osMutexAcquire(osMutexId, osWaitForever);
+         osMessageQueuePut(elev->osMsgControl_id, tmp, 1, 0);
+         openDoor(command, str);
+         osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+         command[2] = elev->level;
+         turnLightOff(command, str);
+         osMessageQueuePut(elev->osMsgControl_id, str, 1, 0);
+         osMutexRelease(osMutexId);
+       }
+       return;
+       break;
+     }
+     default: break;
   }
 }

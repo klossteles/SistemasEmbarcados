@@ -15,15 +15,14 @@
 #define BUFFER 10
 
 typedef struct elevator{
-    char level;
-    char upNextLevel[15];
-    char downNextLevel[15];
-    char name;
-    // ver state_machine.h
-    int state;
-    int prevMovState;
-    osMessageQueueId_t osMessageQueue_id;
-    osMessageQueueId_t osMsgControl_id;
+  char level;
+  uint8_t nextLevel[15];
+  char name;
+  // ver state_machine.h
+  int state;
+  int prevMovState;
+  osMessageQueueId_t osMessageQueue_id;
+  osMessageQueueId_t osMsgControl_id;
 } Elevator;
 
 void rule(char* param, Elevator elev);
@@ -35,7 +34,9 @@ void openDoor(char elev[], char * str);
 void turnLightOn(char param[], char * str);
 void turnLightOff(char param[], char * str);
 char strMap(char *str);
-void addElementToQueue(Elevator *elev, char elem);
-void removeFirstElementFromQueue(Elevator *elev);
-int cmpfunc (const void * a, const void * b);
+void addElementToQueue(Elevator *elev, int level);
+void removeElementFromQueue(Elevator *elev, int level);
+int levelCharToInt(char level);
+char levelIntToChar(int level);
+void getElevatorNextMovement(Elevator *elev, char * str);
 #endif
