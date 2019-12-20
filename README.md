@@ -1,6 +1,6 @@
 Sistemas Embarcados - 2019/2
 
-Alunos: 
+Alunos (Grupo G09): 
   - André Luiz Rodrigues dos Santos
   - Lucas Silvestre Kloss Teles
   - Luís Henrique Beltrão Santana

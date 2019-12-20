@@ -137,7 +137,7 @@ void getElevatorNextMovement(Elevator *elev, char * str){
   int currentLevel = levelCharToInt(elev->level);
   //mantém orientação do elevador
   if (elev->prevMovState == GOING_UP) {
-    for (uint8_t i = currentLevel ; i < 15 ; i++ ) {
+    for (uint8_t i = currentLevel ; i < 16 ; i++ ) {
       if (elev->nextLevel[i] == 1) {
         str[1] = 's';
         elev->state = GOING_UP;
@@ -153,7 +153,7 @@ void getElevatorNextMovement(Elevator *elev, char * str){
       }
     }
   }
-  for (uint8_t i = 0 ; i < 15 ; i++ ) {
+  for (uint8_t i = 0 ; i < 16 ; i++ ) {
     if (elev->nextLevel[i] == 1) {
       if (i < currentLevel) {
         str[1] = 'd';

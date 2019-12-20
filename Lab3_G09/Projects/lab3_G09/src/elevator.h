@@ -16,7 +16,7 @@
 
 typedef struct elevator{
   char level;
-  uint8_t nextLevel[15];
+  uint8_t nextLevel[16];
   char name;
   // ver state_machine.h
   int state;

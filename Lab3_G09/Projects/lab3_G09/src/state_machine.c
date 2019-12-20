@@ -82,7 +82,7 @@ void controlTask(void *arg0){
   osCentralElevatorMessageQueue_id = osMessageQueueNew(BUFFER, sizeof(msg), NULL);
   
   elev_e.level = 'a';                                                           // initialize left elevator
-  for (uint8_t i = 0; i < 15 ; i++) {
+  for (uint8_t i = 0; i < 16 ; i++) {
     elev_e.nextLevel[i] = 0;
   }
   elev_e.name = 'e';
@@ -92,7 +92,7 @@ void controlTask(void *arg0){
   elev_e.prevMovState = GOING_UP;
   
   elev_c.level = 'a';                                                           // initialize central elevator
-  for (uint8_t i = 0; i < 15 ; i++) {
+  for (uint8_t i = 0; i < 16 ; i++) {
     elev_c.nextLevel[i] = 0;
   }
   elev_c.name = 'c';
@@ -102,7 +102,7 @@ void controlTask(void *arg0){
   elev_c.prevMovState = GOING_UP;
   
   elev_d.level = 'a';                                                           // initialize right elevator
-  for (uint8_t i = 0; i < 15 ; i++) {
+  for (uint8_t i = 0; i < 16 ; i++) {
     elev_d.nextLevel[i] = 0;
   }
   elev_d.name = 'd';
@@ -207,7 +207,7 @@ void changeState(Elevator *elev, char command[], char * str){
          elev->state = STOPPED_OPEN_DOORS;
          removeElementFromQueue(elev, levelCharToInt(elev->level));
          uint8_t cont = 0;
-         for (uint8_t i = 0 ; i < 15 ; i++) {
+         for (uint8_t i = 0 ; i < 16 ; i++) {
            if (elev->nextLevel[i] == 1) {
              cont = 1;
              break;
