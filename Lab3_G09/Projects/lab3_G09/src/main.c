@@ -79,10 +79,10 @@ int main (void){
   osKernelInitialize();  
   
   UARTInit();
-  // cria fila de mensagens
+  // create message queue
   char msg[BUFFER];
   osControlMessageQueue_id = osMessageQueueNew(BUFFER, sizeof(msg), NULL);
-  // cria thread responsável pela fila de mensagens e envio para uart.  
+  // create thread responsible for the message queue and send message to uart
   messageControl_id = osThreadNew(controlMessageTask, NULL, NULL);
   control_id = osThreadNew(controlTask, (void*) osControlMessageQueue_id, NULL);                            //recebimento de dados da uart
   

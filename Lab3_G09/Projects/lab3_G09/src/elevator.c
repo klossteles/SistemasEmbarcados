@@ -9,51 +9,49 @@
 #include "elevator.h"
 #include "state_machine.h"
 
-int pos = 0;
-
 void goUp(char elev[], char * str) {
   char command[BUFFER] = "xs\r\0";
-  command[0] = elev[0];  // qual elevador
+  command[0] = elev[0];                                                         // which elevator
   strcpy(str, command);
-}
+}// goUp
 
 void goDown(char elev[], char * str) {
   char command[BUFFER] = "xd\r\0";
-  command[0] = elev[0];  // qual elevador
+  command[0] = elev[0];                                                         // which elevator
   strcpy(str, command);
-}
+}// goDown
 
 void stop(char elev[], char * str) {
   char command[BUFFER] = "xp\r\0";
-  command[0] = elev[0];  // qual elevador
+  command[0] = elev[0];                                                         // which elevator
   strcpy(str, command);
-}
+}// stop
 
 void closeDoor(char elev[], char * str) {   
   char command[BUFFER] = "xf\r\0";
-  command[0] = elev[0];  // qual elevador
+  command[0] = elev[0];                                                         // which elevator
   strcpy(str, command);
-}
+}// closeDoor
 
 void openDoor(char elev[], char * str) {  
   char command[BUFFER] = "xa\r\0";
-  command[0] = elev[0];  // qual elevador
+  command[0] = elev[0];                                                         // which elevator
   strcpy(str, command);
-}
+}// openDoor
 
 void turnLightOn(char param[], char * str) {
   char command[BUFFER] = "xLx\r\0";
-  command[0] = param[0];  // qual elevador
-  command[2] = param[2];  // qual andar
+  command[0] = param[0];                                                        // which elevator
+  command[2] = param[2];                                                        // which floor
   strcpy(str, command);
-}
+}// turnLightOn
 
 void turnLightOff(char param[], char * str) {
   char command[BUFFER] = "xDx\r\0";
-  command[0] = param[0];  // qual elevador
-  command[2] = param[2];  // qual andar
+  command[0] = param[0];                                                        // which elevator
+  command[2] = param[2];                                                        // which floor
   strcpy(str, command);
-}
+} //turnLightOff
 
 char strMap(char *str){
   if(str[2] == '\0'){
@@ -81,15 +79,15 @@ char strMap(char *str){
        default: return '\0';
     }
   }
-}
+}// strMap
 
 void addElementToQueue(Elevator *elev, int level) {
   elev->nextLevel[level] = 1;
-}
+}// addElementToQueue
 
 void removeElementFromQueue(Elevator *elev, int level) {
   elev->nextLevel[level] = 0;
-}
+}// removeElementFromQueue
 
 int levelCharToInt(char level){
   switch(level) {
@@ -111,7 +109,7 @@ int levelCharToInt(char level){
      case 'p': return 15;
      default: return -1;     
   }
-}
+}// levelCharToInt
 
 char levelIntToChar(int level) {
   switch(level) {
@@ -133,7 +131,7 @@ char levelIntToChar(int level) {
      case 15: return 'p';
      default: return '\0';     
   }
-}
+}// levelIntToChar
 
 void getElevatorNextMovement(Elevator *elev, char * str){
   int currentLevel = levelCharToInt(elev->level);
@@ -167,4 +165,4 @@ void getElevatorNextMovement(Elevator *elev, char * str){
       return;
     }
   }  
-}
+}// getElevatorNextMovement
